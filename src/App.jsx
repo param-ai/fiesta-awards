@@ -226,6 +226,8 @@ const UserImage = styled.img`
   height: 35px;
   border-radius: 50%;
   border: 2px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  object-fit: cover;
 `
 
 const UserName = styled.span`
@@ -640,7 +642,13 @@ function App() {
             <>
               <NominateButton onClick={handleNominateClick}>Nominate</NominateButton>
               <UserInfo>
-                <UserImage src={user.photoURL} alt={user.displayName} />
+                <UserImage 
+                  src={user.photoURL || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.displayName || 'User')} 
+                  alt={user.displayName || 'User'} 
+                  onError={(e) => {
+                    e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'U')}&background=random`;
+                  }}
+                />
                 <UserName>{user.displayName}</UserName>
                 <SignInButton onClick={handleSignOut}>Sign Out</SignInButton>
               </UserInfo>
