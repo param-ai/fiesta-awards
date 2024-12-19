@@ -1,0 +1,30 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    match /users/{userId} {
+      allow read: if true;
+      allow write: if isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    match /nominations/{nominationId} {
+      allow read: if true;
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated() && 
+        (request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['totalVotes', 'juryScore', 'juryVotes', 'voters', 'juryVoters']));
+    }
+    
+    match /votes/{voteId} {
+      allow read: if true;
+      allow create: if isAuthenticated() && 
+        voteId == request.auth.uid + '_' + request.resource.data.nominationId &&
+        request.resource.data.keys().hasOnly(['userId', 'nominationId', 'isJury', 'timestamp']) &&
+        request.resource.data.userId == request.auth.uid;
+      allow update, delete: if false;
+    }
+  }
+} 
