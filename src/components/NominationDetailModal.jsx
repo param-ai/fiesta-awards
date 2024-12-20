@@ -223,6 +223,17 @@ const Answer = styled.div`
   line-height: 1.5;
 `
 
+const renderAnswers = (section) => {
+  if (!section || !section.answers) return null;
+  
+  return section.answers.map((item, index) => (
+    <Answer key={index}>
+      <Question>{item?.question || 'N/A'}</Question>
+      <Response>{item?.answer || 'N/A'}</Response>
+    </Answer>
+  ));
+};
+
 export const NominationDetailModal = ({ nomination, onClose }) => {
   const { type, nominee, nominator, totalVotes, juryScore, categoryQuestions } = nomination;
 
@@ -287,34 +298,54 @@ export const NominationDetailModal = ({ nomination, onClose }) => {
           )}
 
           {categoryQuestions && (
-            <Section>
-              <SectionTitle>Category Questions</SectionTitle>
-              <QuestionGrid>
-                {categoryQuestions.numeric.questions.map((question, index) => (
-                  <QuestionCard key={`numeric-${index}`}>
-                    <Question>{question}</Question>
-                    <Answer>{categoryQuestions.numeric.answers[index].answer}</Answer>
-                  </QuestionCard>
-                ))}
-                
-                {categoryQuestions.ratings.questions.map((question, index) => (
-                  <QuestionCard key={`rating-${index}`}>
-                    <Question>{question}</Question>
-                    <Answer>{categoryQuestions.ratings.answers[index].answer}/10</Answer>
-                  </QuestionCard>
-                ))}
-              </QuestionGrid>
-            </Section>
-          )}
+            <>
+              {/* Numeric Questions */}
+              {categoryQuestions.numeric?.questions?.length > 0 && (
+                <Section>
+                  <SectionTitle>Numeric Metrics</SectionTitle>
+                  <QuestionGrid>
+                    {categoryQuestions.numeric.questions.map((question, index) => (
+                      <QuestionCard key={`numeric-${index}`}>
+                        <Question>{question}</Question>
+                        <Answer>
+                          {categoryQuestions.numeric.answers?.[index]?.answer || 'N/A'}
+                        </Answer>
+                      </QuestionCard>
+                    ))}
+                  </QuestionGrid>
+                </Section>
+              )}
 
-          {categoryQuestions?.textAnswers?.questions.map((question, index) => (
-            <Section key={`text-${index}`}>
-              <SectionTitle>{question}</SectionTitle>
-              <Answer style={{ whiteSpace: 'pre-wrap' }}>
-                {categoryQuestions.textAnswers.answers[index].answer}
-              </Answer>
-            </Section>
-          ))}
+              {/* Rating Questions */}
+              {categoryQuestions.ratings?.questions?.length > 0 && (
+                <Section>
+                  <SectionTitle>Ratings</SectionTitle>
+                  <QuestionGrid>
+                    {categoryQuestions.ratings.questions.map((question, index) => (
+                      <QuestionCard key={`rating-${index}`}>
+                        <Question>{question}</Question>
+                        <Answer>
+                          {categoryQuestions.ratings.answers?.[index]?.answer || 'N/A'}/10
+                        </Answer>
+                      </QuestionCard>
+                    ))}
+                  </QuestionGrid>
+                </Section>
+              )}
+
+              {/* Text Questions */}
+              {categoryQuestions.textAnswers?.questions?.length > 0 && 
+                categoryQuestions.textAnswers.questions.map((question, index) => (
+                  <Section key={`text-${index}`}>
+                    <SectionTitle>{question}</SectionTitle>
+                    <Answer style={{ whiteSpace: 'pre-wrap' }}>
+                      {categoryQuestions.textAnswers.answers?.[index]?.answer || 'N/A'}
+                    </Answer>
+                  </Section>
+                ))
+              }
+            </>
+          )}
         </Content>
       </ModalContent>
     </ModalOverlay>

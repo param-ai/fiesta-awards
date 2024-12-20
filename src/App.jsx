@@ -514,37 +514,23 @@ function App() {
 
   useEffect(() => {
     console.log('Search effect running with term:', searchTerm);
-    console.log('Current nominations:', nominations);
-
-    if (!searchTerm.trim()) {
-      setFilteredNominations(nominations);
+    if (!nominations || nominations.length === 0) {
+      setFilteredNominations([]);
       return;
     }
 
     const searchTermLower = searchTerm.toLowerCase();
     const filtered = nominations.filter(nomination => {
-      // Search by nominee name
-      const nameMatch = nomination.nominee.name.toLowerCase().includes(searchTermLower);
+      if (!nomination || !nomination.nominee) return false;
       
-      // Search by category
-      const categoryMatch = nomination.nominee.category.toLowerCase().includes(searchTermLower);
-      
-      // Search by nominator (if it's a peer nomination)
+      const nameMatch = nomination.nominee.name?.toLowerCase().includes(searchTermLower);
+      const categoryMatch = nomination.nominee.category?.toLowerCase().includes(searchTermLower);
       const nominatorMatch = nomination.type === 'other' && 
-        nomination.nominator?.name.toLowerCase().includes(searchTermLower);
+        nomination.nominator?.name?.toLowerCase().includes(searchTermLower);
 
-      const result = nameMatch || categoryMatch || nominatorMatch;
-      console.log('Nomination match result:', { 
-        nomination: nomination.nominee.name, 
-        nameMatch, 
-        categoryMatch, 
-        nominatorMatch, 
-        result 
-      });
-      return result;
+      return nameMatch || categoryMatch || nominatorMatch;
     });
 
-    console.log('Filtered results:', filtered);
     setFilteredNominations(filtered);
   }, [searchTerm, nominations]);
 
