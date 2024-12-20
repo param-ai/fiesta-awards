@@ -13,6 +13,7 @@
     "firebase": "^10.x.x",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-hot-toast": "^2.4.1",
     "react-icons": "^4.x.x",
     "react-router-dom": "^6.28.0",
     "styled-components": "^6.x.x"

@@ -1,57 +1,31 @@
 import { db } from '../firebase';
-import { 
-  doc, 
-  writeBatch, 
-  increment, 
-  getDoc, 
-  arrayUnion, 
-  serverTimestamp 
-} from 'firebase/firestore';
+import { doc, setDoc, updateDoc, increment, arrayUnion } from 'firebase/firestore';
 
-export const submitVote = async (nominationId, userId, isJury) => {
-  try {
-    console.log('Submitting vote:', { nominationId, userId, isJury }); // Debug log
+export const submitVote = async (nominationId, userId, isJury, juryPoints = null) => {
+  const voteRef = doc(db, 'votes', `${userId}_${nominationId}`);
+  const nominationRef = doc(db, 'nominations', nominationId);
 
-    // First check if user has already voted
-    const voteRef = doc(db, 'votes', `${userId}_${nominationId}`);
-    const voteDoc = await getDoc(voteRef);
-    
-    if (voteDoc.exists()) {
-      throw new Error('Already voted');
-    }
+  // Create the vote document
+  await setDoc(voteRef, {
+    userId,
+    nominationId,
+    timestamp: new Date(),
+    isJury
+  });
 
-    const batch = writeBatch(db);
-    const nominationRef = doc(db, 'nominations', nominationId);
-
-    // Record the vote with exact structure matching rules
-    batch.set(voteRef, {
-      userId,
-      nominationId,
-      isJury,
-      timestamp: serverTimestamp()
+  // Update nomination counters
+  if (isJury && juryPoints !== null) {
+    // For jury votes, only update jury-related fields
+    await updateDoc(nominationRef, {
+      juryVotes: increment(1),
+      juryScore: increment(juryPoints),
+      juryVoters: arrayUnion(userId)
     });
-
-    // Update nomination with only allowed fields
-    if (isJury) {
-      console.log('Adding jury vote...'); // Debug log
-      batch.update(nominationRef, {
-        juryScore: increment(50), // Make sure this is being applied
-        juryVotes: increment(1),
-        juryVoters: arrayUnion(userId)
-      });
-    } else {
-      console.log('Adding normal vote...'); // Debug log
-      batch.update(nominationRef, {
-        totalVotes: increment(1),
-        voters: arrayUnion(userId)
-      });
-    }
-
-    await batch.commit();
-    console.log('Vote submitted successfully'); // Debug log
-    return true;
-  } catch (error) {
-    console.error('Error submitting vote:', error);
-    throw error;
+  } else {
+    // For regular votes, only update totalVotes
+    await updateDoc(nominationRef, {
+      totalVotes: increment(1),
+      voters: arrayUnion(userId)
+    });
   }
 }; 

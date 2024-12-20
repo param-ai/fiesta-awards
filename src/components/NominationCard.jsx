@@ -6,6 +6,7 @@ import { submitVote } from '../services/votingService';
 import { doc, onSnapshot, getDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import { NominationDetailModal } from './NominationDetailModal';
+import { JuryVoteModal } from './JuryVoteModal';
 
 const Card = styled.div`
   background: rgba(255, 255, 255, 0.02);
@@ -157,12 +158,11 @@ const Divider = styled.div`
 `
 
 const NominatorInfo = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-top: 0.75rem;
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 0.875rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.6);
 `
 
 const NominatorName = styled.span`
@@ -208,6 +208,7 @@ export const NominationCard = ({ nomination }) => {
   const [hasVoted, setHasVoted] = useState(false);
   const isJury = userDetails?.jury || false;
   const [showTooltip, setShowTooltip] = useState(false);
+  const [showJuryModal, setShowJuryModal] = useState(false);
 
   useEffect(() => {
     if (currentUser && userDetails) {
@@ -223,14 +224,26 @@ export const NominationCard = ({ nomination }) => {
   const handleVote = useCallback(async () => {
     if (!currentUser || hasVoted) return;
 
-    try {
-      console.log('Submitting vote with jury status:', isJury); // Debug log
-      await submitVote(nomination.id, currentUser.uid, isJury);
-      setHasVoted(true);
-    } catch (error) {
-      console.error('Error voting:', error);
+    if (isJury) {
+      setShowJuryModal(true);
+    } else {
+      try {
+        await submitVote(nomination.id, currentUser.uid, false);
+        setHasVoted(true);
+      } catch (error) {
+        console.error('Error voting:', error);
+      }
     }
   }, [currentUser, hasVoted, nomination.id, isJury]);
+
+  const handleJuryVote = async (nominationId, points) => {
+    try {
+      await submitVote(nominationId, currentUser.uid, true, points);
+      setHasVoted(true);
+    } catch (error) {
+      console.error('Error submitting jury vote:', error);
+    }
+  };
 
   useEffect(() => {
     let isMounted = true;
@@ -323,14 +336,12 @@ export const NominationCard = ({ nomination }) => {
         </div>
       </Actions>
 
-      {type === 'other' && nominator && (
-        <>
-          <Divider />
-          <NominatorInfo>
-            Nominated by <NominatorName>{nominator.name}</NominatorName>
-          </NominatorInfo>
-        </>
-      )}
+      <>
+        <Divider />
+        <NominatorInfo>
+          Nominated by {nomination.type === 'self' ? 'Self' : nominator.name}
+        </NominatorInfo>
+      </>
     </Card>
   ), [nominee, type, nominator, totalVotes, juryScore, hasVoted, currentUser, isJury, showTooltip]);
 
@@ -342,6 +353,15 @@ export const NominationCard = ({ nomination }) => {
         <NominationDetailModal 
           nomination={nomination}
           onClose={() => setShowDetail(false)}
+        />
+      )}
+
+      {showJuryModal && (
+        <JuryVoteModal
+          onClose={() => setShowJuryModal(false)}
+          onSubmit={handleJuryVote}
+          nominationId={nomination.id}
+          nomineeName={nominee.name}
         />
       )}
     </>

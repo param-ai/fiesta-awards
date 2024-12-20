@@ -11,6 +11,7 @@ import { createOrUpdateUser } from './services/authService'
 import { useNavigate, Routes, Route } from 'react-router-dom'
 import { JuryPage } from './components/JuryPage'
 import { RulesPage } from './components/RulesPage'
+import { LeaderboardPage } from './components/LeaderboardPage'
 
 const Logo = styled.div`
   display: flex;
@@ -415,6 +416,12 @@ const EmojiContainer = styled.div`
   margin: 2rem 0;
 `
 
+const LeaderboardButton = styled(JuryButton)`
+  &::before {
+    content: '🏆';
+  }
+`
+
 function App() {
   const [timeLeft, setTimeLeft] = useState('')
   const [user, setUser] = useState(null)
@@ -637,6 +644,9 @@ function App() {
             value={searchTerm}
             onChange={handleSearch}
           />
+          <LeaderboardButton onClick={() => navigate('/leaderboard')}>
+            Leaderboard
+          </LeaderboardButton>
           <JuryButton onClick={() => navigate('/jury')}>Jury</JuryButton>
           {user ? (
             <>
@@ -661,6 +671,7 @@ function App() {
         <Routes>
           <Route path="/jury" element={<JuryPage />} />
           <Route path="/rules" element={<RulesPage />} />
+          <Route path="/leaderboard" element={<LeaderboardPage />} />*/
           <Route path="/" element={renderContent()} />
         </Routes>
 
