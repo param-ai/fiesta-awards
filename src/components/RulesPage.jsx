@@ -197,7 +197,7 @@ export const RulesPage = () => {
           <H3>Jury Voting</H3>
           <List>
             <li>Each category is evaluated by a panel of industry experts.</li>
-            <li>Each jury member has 50 points to allocate to any nominee they consider deserving of the category.</li>
+            <li>Each jury member has max 50 points to allocate to any nominee they consider deserving of the category.</li>
             <li>Jury evaluations focus on:
               <ul>
                 <li>Measurable metrics and achievements.</li>
