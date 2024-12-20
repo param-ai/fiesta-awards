@@ -7,6 +7,7 @@ import { doc, onSnapshot, getDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import { NominationDetailModal } from './NominationDetailModal';
 import { JuryVoteModal } from './JuryVoteModal';
+import { Toast } from './Toast';
 
 const Card = styled.div`
   background: rgba(255, 255, 255, 0.02);
@@ -209,6 +210,8 @@ export const NominationCard = ({ nomination }) => {
   const isJury = userDetails?.jury || false;
   const [showTooltip, setShowTooltip] = useState(false);
   const [showJuryModal, setShowJuryModal] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const [isToastHiding, setIsToastHiding] = useState(false);
 
   useEffect(() => {
     if (currentUser && userDetails) {
@@ -221,7 +224,10 @@ export const NominationCard = ({ nomination }) => {
 
   const { nominee, type, nominator, totalVotes, juryScore } = nomination;
 
-  const handleVote = useCallback(async () => {
+  const handleVote = useCallback(async (e) => {
+    // Stop event propagation to prevent card click
+    e.stopPropagation();
+    
     if (!currentUser || hasVoted) return;
 
     if (isJury) {
@@ -230,6 +236,12 @@ export const NominationCard = ({ nomination }) => {
       try {
         await submitVote(nomination.id, currentUser.uid, false);
         setHasVoted(true);
+        // Show toast
+        setShowToast(true);
+        // Start hiding animation after 700ms
+        setTimeout(() => setIsToastHiding(true), 700);
+        // Remove toast after animation (300ms)
+        setTimeout(() => setShowToast(false), 1000);
       } catch (error) {
         console.error('Error voting:', error);
       }
@@ -319,7 +331,7 @@ export const NominationCard = ({ nomination }) => {
           onMouseLeave={() => setShowTooltip(false)}
         >
           <Button
-            onClick={currentUser ? handleVote : undefined}
+            onClick={handleVote}
             disabled={hasVoted}
             $voted={hasVoted}
             $isJury={isJury}
@@ -362,6 +374,13 @@ export const NominationCard = ({ nomination }) => {
           onSubmit={handleJuryVote}
           nominationId={nomination.id}
           nomineeName={nominee.name}
+        />
+      )}
+
+      {showToast && (
+        <Toast 
+          message="Your vote has been recorded. Great job! 🎉" 
+          hiding={isToastHiding}
         />
       )}
     </>

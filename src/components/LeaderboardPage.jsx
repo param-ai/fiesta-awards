@@ -105,7 +105,7 @@ const CategoryTitle = styled.h2`
 
 const categories = [
   "Best Tech Recruiter",
-  "Best GTM/Business Recruiter",
+  "Best GTM/ Business Recruiter",
   "Best Leadership Recruiter",
   "Top TA Leader",
   "Best Candidate Experience Specialist",
@@ -175,10 +175,34 @@ const LinkedInLink = styled.a`
   }
 `
 
+const SearchBar = styled.input`
+  padding: 0.8rem 1.2rem;
+  width: 100%;
+  max-width: 500px;
+  border-radius: 25px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  transition: all 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+  }
+`
+
 export const LeaderboardPage = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [nominations, setNominations] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const fetchNominations = async () => {
@@ -192,6 +216,8 @@ export const LeaderboardPage = () => {
           const juryScore = data.juryScore || 0;
           const juryVotes = data.juryVotes || 0;
           const communityVotes = data.totalVotes || 0;
+          
+          console.log('Nomination category:', data.nominationData.nominee.category);
           
           return {
             id: doc.id,
@@ -215,7 +241,25 @@ export const LeaderboardPage = () => {
   }, []);
 
   const filteredAndSortedNominations = nominations
-    .filter(nom => selectedCategory === "All" || nom.category === selectedCategory)
+    .filter(nom => {
+      const matchesCategory = selectedCategory === "All" || 
+        nom.category === selectedCategory;
+      
+      console.log({
+        nominationCategory: nom.category,
+        selectedCategory,
+        matches: matchesCategory
+      });
+      
+      const searchLower = searchTerm.toLowerCase();
+      const matchesSearch = 
+        nom.nominee.name.toLowerCase().includes(searchLower) ||
+        nom.nominee.company.toLowerCase().includes(searchLower) ||
+        nom.nominee.jobTitle.toLowerCase().includes(searchLower) ||
+        nom.category.toLowerCase().includes(searchLower);
+      
+      return matchesCategory && matchesSearch;
+    })
     .sort((a, b) => b.totalScore - a.totalScore);
 
   if (loading) {
@@ -224,6 +268,13 @@ export const LeaderboardPage = () => {
 
   return (
     <LeaderboardContainer>
+      <SearchBar
+        type="text"
+        placeholder="Search by name, company, job title..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+      
       <CategoriesContainer>
         <CategoryButton 
           $active={selectedCategory === "All"}

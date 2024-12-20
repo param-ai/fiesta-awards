@@ -217,19 +217,12 @@ export const RulesPage = () => {
 
         <Section>
           <H2>Scoring Formula</H2>
-          <P>The final score is calculated using a weighted formula that balances jury votes and community upvotes.</P>
+          <P>The final score is calculated using a formula that factors in both jury votes and community upvotes.</P>
           
           <H3>Formula</H3>
-          <P>Total Score = (Jury Points × 50) + (Unique Upvotes × W)</P>
+          <P>Total Score = (Total Jury Points × Total Jury Vote Count) + (Total Unique Upvotes × 10)</P>
           
-          <H3>Weight Factor (W)</H3>
-          <P>The weight factor adjusts the influence of community votes:</P>
-          <List>
-            <li>Low W (1–5): Prioritizes jury votes</li>
-            <li>Medium W (10–20): Balances jury and community votes</li>
-            <li>High W (25–50): Gives significant weight to public votes</li>
-          </List>
-          <P>For FiesTA Recruitment Awards, W = 10 (balanced)</P>
+          <P>For FiesTA Recruitment Awards, Each Unique Upvote will be upscaled by 10 points</P>
 
           <H3>Example Calculation</H3>
           <Table>
@@ -237,6 +230,7 @@ export const RulesPage = () => {
               <tr>
                 <th>Nominee</th>
                 <th>Jury Points</th>
+                <th>Jury Vote Count</th>
                 <th>Community Upvotes</th>
                 <th>Total Score</th>
               </tr>
@@ -244,21 +238,17 @@ export const RulesPage = () => {
             <tbody>
               <tr>
                 <td>Nominee A</td>
+                <td>70</td>
                 <td>5</td>
-                <td>100</td>
-                <td>(5 × 50) + (100 × 10) = 750</td>
+                <td>10</td>
+                <td>(70 × 5) + (10 × 10) = 450</td>
               </tr>
               <tr>
                 <td>Nominee B</td>
-                <td>6</td>
-                <td>50</td>
-                <td>(6 × 50) + (50 × 10) = 800</td>
-              </tr>
-              <tr>
-                <td>Nominee C</td>
-                <td>3</td>
-                <td>200</td>
-                <td>(3 × 50) + (200 × 10) = 1250</td>
+                <td>10</td>
+                <td>2</td>
+                <td>30</td>
+                <td>(10 × 2) + (30 × 10) = 320</td>
               </tr>
             </tbody>
           </Table>

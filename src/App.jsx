@@ -8,7 +8,7 @@ import { collection, query, orderBy, getDocs, onSnapshot } from 'firebase/firest
 import { db } from './firebase'
 import { NominationCard } from './components/NominationCard'
 import { createOrUpdateUser } from './services/authService'
-import { useNavigate, Routes, Route } from 'react-router-dom'
+import { useNavigate, Routes, Route, useLocation } from 'react-router-dom'
 import { JuryPage } from './components/JuryPage'
 import { RulesPage } from './components/RulesPage'
 import { LeaderboardPage } from './components/LeaderboardPage'
@@ -156,9 +156,24 @@ const NominateButton = styled.button`
   }
 `
 
+const HeaderButtons = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-left: auto;
+  
+  & > *:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: -7.5px;
+    height: 20px;
+    width: 1px;
+    background: rgba(255, 255, 255, 0.1);
+  }
+`
+
 const Header = styled.header`
   display: flex;
-  justify-content: space-between;
   align-items: center;
   gap: 1.5rem;
   padding: 1rem;
@@ -169,11 +184,16 @@ const Header = styled.header`
   z-index: 100;
   backdrop-filter: blur(8px);
   margin-bottom: 2rem;
-  
+
   @media (max-width: 768px) {
     flex-direction: column;
     padding: 1rem;
     gap: 0.75rem;
+    
+    ${HeaderButtons} {
+      width: 100%;
+      justify-content: center;
+    }
     
     ${Logo} {
       width: 100%;
@@ -431,6 +451,7 @@ function App() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredNominations, setFilteredNominations] = useState([]);
   const navigate = useNavigate()
+  const location = useLocation();
 
   useEffect(() => {
     const calculateTimeLeft = () => {
@@ -562,6 +583,14 @@ function App() {
     console.log('Search term:', value);
   };
 
+  const shouldShowSearch = () => {
+    return !['/leaderboard', '/jury'].includes(location.pathname);
+  };
+
+  const shouldShowRulesButton = () => {
+    return location.pathname !== '/rules';
+  };
+
   const renderContent = () => {
     if (loading) {
       return <LoadingState>Loading nominations...</LoadingState>;
@@ -624,40 +653,38 @@ function App() {
             <Title onClick={() => navigate('/')}>FiesTA Awwards</Title>
             <Countdown>{timeLeft}</Countdown>
           </Logo>
-          <SearchBar 
-            type="text" 
-            placeholder="Search by name, category or nominator..."
-            value={searchTerm}
-            onChange={handleSearch}
-          />
-          <LeaderboardButton onClick={() => navigate('/leaderboard')}>
-            Leaderboard
-          </LeaderboardButton>
-          <JuryButton onClick={() => navigate('/jury')}>Jury</JuryButton>
-          {user ? (
-            <>
-              <NominateButton onClick={handleNominateClick}>Nominate</NominateButton>
-              <UserInfo>
-                <UserImage 
-                  src={user.photoURL || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.displayName || 'User')} 
-                  alt={user.displayName || 'User'} 
-                  onError={(e) => {
-                    e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'U')}&background=random`;
-                  }}
-                />
-                <UserName>{user.displayName}</UserName>
-                <SignInButton onClick={handleSignOut}>Sign Out</SignInButton>
-              </UserInfo>
-            </>
-          ) : (
-            <SignInButton onClick={handleSignIn}>Sign In with Google</SignInButton>
+          {shouldShowSearch() && (
+            <SearchBar 
+              type="text" 
+              placeholder="Search by name, category or nominator..."
+              value={searchTerm}
+              onChange={handleSearch}
+            />
           )}
+          <HeaderButtons>
+            <LeaderboardButton onClick={() => navigate('/leaderboard')}>
+              Leaderboard
+            </LeaderboardButton>
+            <JuryButton onClick={() => navigate('/jury')}>Jury</JuryButton>
+            {user ? (
+              <>
+                <NominateButton onClick={handleNominateClick}>Nominate</NominateButton>
+                <UserInfo>
+                  <UserImage src={user.photoURL} alt={user.displayName} />
+                  <UserName>{user.displayName}</UserName>
+                  <SignInButton onClick={handleSignOut}>Sign Out</SignInButton>
+                </UserInfo>
+              </>
+            ) : (
+              <SignInButton onClick={handleSignIn}>Sign In with Google</SignInButton>
+            )}
+          </HeaderButtons>
         </Header>
 
         <Routes>
           <Route path="/jury" element={<JuryPage />} />
           <Route path="/rules" element={<RulesPage />} />
-          <Route path="/leaderboard" element={<LeaderboardPage />} />*/
+          <Route path="/leaderboard" element={<LeaderboardPage />} />
           <Route path="/" element={renderContent()} />
         </Routes>
 
@@ -665,9 +692,11 @@ function App() {
           <NominationModal onClose={() => setShowNominationModal(false)} />
         )}
 
-        <FloatingRulesButton onClick={() => navigate('/rules')}>
-          Rules
-        </FloatingRulesButton>
+        {shouldShowRulesButton() && (
+          <FloatingRulesButton onClick={() => navigate('/rules')}>
+            Rules
+          </FloatingRulesButton>
+        )}
       </Container>
     </AuthProvider>
   );
