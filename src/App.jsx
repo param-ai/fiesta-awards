@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { auth, googleProvider } from './firebase'
-import { signInWithPopup, signOut } from 'firebase/auth'
+import { signInWithPopup, signOut, signInWithRedirect, getRedirectResult } from 'firebase/auth'
 import { NominationModal } from './components/NominationModal'
 import { AuthProvider } from './contexts/AuthContext'
 import { collection, query, orderBy, getDocs, onSnapshot } from 'firebase/firestore'
@@ -557,13 +557,30 @@ function App() {
 
   const handleSignIn = async () => {
     try {
-      const result = await signInWithPopup(auth, googleProvider);
-      // Explicitly call createOrUpdateUser after successful sign-in
-      await createOrUpdateUser(result.user);
+      await signInWithRedirect(auth, googleProvider);
     } catch (error) {
-      console.error("Error signing in:", error);
+      console.error('Error initiating sign in:', error);
     }
   };
+
+  useEffect(() => {
+    const handleRedirectResult = async () => {
+      try {
+        const result = await getRedirectResult(auth);
+        if (result?.user) {
+          // User successfully signed in
+          await createOrUpdateUser(result.user);
+          console.log('User data saved/updated in Firestore');
+        }
+      } catch (error) {
+        if (error.code !== 'auth/popup-closed-by-user') {
+          console.error('Error signing in:', error);
+        }
+      }
+    };
+
+    handleRedirectResult();
+  }, []);
 
   const handleSignOut = async () => {
     try {
