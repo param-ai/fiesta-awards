@@ -30,10 +30,27 @@ googleProvider.setCustomParameters({
 const signInWithGoogle = async () => {
   try {
     console.log('1. Starting Google Sign In...');
-    const result = await signInWithPopup(auth, googleProvider);
+    // Add popup settings
+    const auth = getAuth();
+    auth.settings = {
+      appVerificationDisabledForTesting: true // Helps with popup issues
+    };
+    
+    const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({
+      prompt: 'select_account',
+      auth_type: 'rerequest',
+      access_type: 'offline'
+    });
+
+    const result = await signInWithPopup(auth, provider);
     console.log('2. Sign in successful:', result);
     return result;
   } catch (error) {
+    if (error.code === 'auth/popup-closed-by-user') {
+      console.log('User closed the popup window');
+      // Handle gracefully - maybe show a message to user
+    }
     console.error('Sign in error:', error);
     throw error;
   }
