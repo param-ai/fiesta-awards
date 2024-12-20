@@ -5,7 +5,7 @@ import { db } from '../firebase';
 import { FaLinkedin } from 'react-icons/fa';
 
 const LeaderboardContainer = styled.div`
-  padding: 2rem;
+  padding: 1rem 2rem;
   color: white;
 `
 
@@ -13,7 +13,7 @@ const CategoriesContainer = styled.div`
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   padding-bottom: 1rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 `

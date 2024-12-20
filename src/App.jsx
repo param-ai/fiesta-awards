@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { auth, googleProvider } from './firebase'
-import { signInWithPopup, signOut, signInWithRedirect, getRedirectResult } from 'firebase/auth'
+import { auth, signInWithGoogle } from './firebase'
+import { signOut } from 'firebase/auth'
 import { NominationModal } from './components/NominationModal'
-import { AuthProvider } from './contexts/AuthContext'
+import { AuthProvider, useAuth } from './contexts/AuthContext'
 import { collection, query, orderBy, getDocs, onSnapshot } from 'firebase/firestore'
 import { db } from './firebase'
 import { NominationCard } from './components/NominationCard'
@@ -12,6 +12,7 @@ import { useNavigate, Routes, Route, useLocation } from 'react-router-dom'
 import { JuryPage } from './components/JuryPage'
 import { RulesPage } from './components/RulesPage'
 import { LeaderboardPage } from './components/LeaderboardPage'
+import { FaTrophy } from 'react-icons/fa'
 
 const Logo = styled.div`
   display: flex;
@@ -442,7 +443,7 @@ const LeaderboardButton = styled(JuryButton)`
   }
 `
 
-function App() {
+function AppContent() {
   const [timeLeft, setTimeLeft] = useState('')
   const [user, setUser] = useState(null)
   const [showNominationModal, setShowNominationModal] = useState(false)
@@ -452,6 +453,11 @@ function App() {
   const [filteredNominations, setFilteredNominations] = useState([]);
   const navigate = useNavigate()
   const location = useLocation();
+  const isLeaderboardPage = location.pathname === '/leaderboard';
+  const isJuryPage = location.pathname === '/jury';
+  const isRulesPage = location.pathname === '/rules';
+
+  const { currentUser, userDetails, signIn } = useAuth();
 
   useEffect(() => {
     const calculateTimeLeft = () => {
@@ -557,46 +563,15 @@ function App() {
 
   const handleSignIn = async () => {
     try {
-      const result = await signInWithPopup(auth, googleProvider);
-      if (result.user) {
-        await createOrUpdateUser(result.user);
-        console.log('User signed in successfully:', result.user.displayName);
-      }
+      await signInWithGoogle();
     } catch (error) {
-      if (error.code === 'auth/popup-closed-by-user') {
-        console.log('Sign-in was cancelled by the user');
-      } else if (error.code === 'auth/third-party-cookies-blocked') {
-        // Handle third-party cookie blocking
-        console.error('Please enable third-party cookies or try a different browser');
-        // You might want to show a user-friendly message here
-      } else {
-        console.error('Sign-in error:', error.code, error.message);
-      }
+      console.error("Error signing in:", error)
     }
-  };
-
-  useEffect(() => {
-    const handleRedirectResult = async () => {
-      try {
-        const result = await getRedirectResult(auth);
-        if (result?.user) {
-          // User successfully signed in
-          await createOrUpdateUser(result.user);
-          console.log('User data saved/updated in Firestore');
-        }
-      } catch (error) {
-        if (error.code !== 'auth/popup-closed-by-user') {
-          console.error('Error signing in:', error);
-        }
-      }
-    };
-
-    handleRedirectResult();
-  }, []);
+  }
 
   const handleSignOut = async () => {
     try {
-      await signOut(auth)
+      await signOut(auth);
     } catch (error) {
       console.error("Error signing out:", error)
     }
@@ -665,68 +640,79 @@ function App() {
   };
 
   return (
-    <AuthProvider>
-      <Container>
-        <MobileOverlay>
-          <MobileMessage>FiesTA Awwards is best suited for desktop view</MobileMessage>
-          <EmojiContainer>🏆</EmojiContainer>
-          <MobileSubtext>
-            These amazing recruiters deserve a bigger space to shine! ✨
-            <br /><br />
-            Please visit us on your desktop for the full experience.
-          </MobileSubtext>
-        </MobileOverlay>
+    <Container>
+      <MobileOverlay>
+        <MobileMessage>FiesTA Awwards is best suited for desktop view</MobileMessage>
+        <EmojiContainer>🏆</EmojiContainer>
+        <MobileSubtext>
+          These amazing recruiters deserve a bigger space to shine! ✨
+          <br /><br />
+          Please visit us on your desktop for the full experience.
+        </MobileSubtext>
+      </MobileOverlay>
 
-        <Header>
-          <Logo>
-            <Title onClick={() => navigate('/')}>FiesTA Awwards</Title>
-            <Countdown>{timeLeft}</Countdown>
-          </Logo>
-          {shouldShowSearch() && (
-            <SearchBar 
-              type="text" 
-              placeholder="Search by name, category or nominator..."
-              value={searchTerm}
-              onChange={handleSearch}
-            />
+      <Header>
+        <Logo>
+          <Title onClick={() => navigate('/')}>FiesTA Awwards</Title>
+          <Countdown>{timeLeft}</Countdown>
+        </Logo>
+        
+        {!isLeaderboardPage && !isJuryPage && !isRulesPage && (
+          <SearchBar 
+            type="text" 
+            placeholder="Search by name, category or nominator..."
+            value={searchTerm}
+            onChange={handleSearch}
+          />
+        )}
+
+        <HeaderButtons>
+          <LeaderboardButton onClick={() => navigate('/leaderboard')}>
+            Leaderboard
+          </LeaderboardButton>
+          <JuryButton onClick={() => navigate('/jury')}>Jury</JuryButton>
+          {user ? (
+            <>
+              <NominateButton onClick={handleNominateClick}>Nominate</NominateButton>
+              <UserInfo>
+                <UserImage src={user.photoURL} alt={user.displayName} />
+                <UserName>{user.displayName}</UserName>
+                <SignInButton onClick={handleSignOut}>Sign Out</SignInButton>
+              </UserInfo>
+            </>
+          ) : (
+            <SignInButton onClick={handleSignIn}>Sign In with Google</SignInButton>
           )}
-          <HeaderButtons>
-            <LeaderboardButton onClick={() => navigate('/leaderboard')}>
-              Leaderboard
-            </LeaderboardButton>
-            <JuryButton onClick={() => navigate('/jury')}>Jury</JuryButton>
-            {user ? (
-              <>
-                <NominateButton onClick={handleNominateClick}>Nominate</NominateButton>
-                <UserInfo>
-                  <UserImage src={user.photoURL} alt={user.displayName} />
-                  <UserName>{user.displayName}</UserName>
-                  <SignInButton onClick={handleSignOut}>Sign Out</SignInButton>
-                </UserInfo>
-              </>
-            ) : (
-              <SignInButton onClick={handleSignIn}>Sign In with Google</SignInButton>
-            )}
-          </HeaderButtons>
-        </Header>
+        </HeaderButtons>
+      </Header>
 
-        <Routes>
-          <Route path="/jury" element={<JuryPage />} />
-          <Route path="/rules" element={<RulesPage />} />
-          <Route path="/leaderboard" element={<LeaderboardPage />} />
-          <Route path="/" element={renderContent()} />
-        </Routes>
+      <Routes>
+        <Route path="/jury" element={<JuryPage />} />
+        <Route path="/rules" element={<RulesPage />} />
+        <Route path="/leaderboard" element={<LeaderboardPage />} />
+        <Route path="/" element={renderContent()} />
+      </Routes>
 
-        {showNominationModal && (
-          <NominationModal onClose={() => setShowNominationModal(false)} />
-        )}
+      {showNominationModal && (
+        <NominationModal onClose={() => setShowNominationModal(false)} />
+      )}
 
-        {shouldShowRulesButton() && (
-          <FloatingRulesButton onClick={() => navigate('/rules')}>
-            Rules
-          </FloatingRulesButton>
-        )}
-      </Container>
+      {shouldShowRulesButton() && (
+        <FloatingRulesButton onClick={() => navigate('/rules')}>
+          Rules
+        </FloatingRulesButton>
+      )}
+    </Container>
+  );
+}
+
+function App() {
+  const location = useLocation();
+  const shouldShowSearchBar = !['/', '/jury', '/rules'].includes(location.pathname);
+
+  return (
+    <AuthProvider>
+      <AppContent />
     </AuthProvider>
   );
 }
