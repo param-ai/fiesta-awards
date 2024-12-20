@@ -5,7 +5,8 @@ import {
   GoogleAuthProvider, 
   signInWithPopup,
   browserLocalPersistence, 
-  setPersistence 
+  setPersistence,
+  inMemoryPersistence
 } from "firebase/auth";
 
 const firebaseConfig = {
@@ -22,12 +23,35 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 
-// Set persistence to LOCAL
-setPersistence(auth, browserLocalPersistence);
+// Try to set persistence to LOCAL, fallback to IN_MEMORY if cookies are blocked
+const initAuth = async () => {
+  try {
+    await setPersistence(auth, browserLocalPersistence);
+  } catch (error) {
+    console.warn('Local persistence failed, falling back to in-memory:', error);
+    await setPersistence(auth, inMemoryPersistence);
+  }
+};
 
-// Configure Google provider
+// Initialize auth
+initAuth();
+
+// Configure Google provider with additional settings
 googleProvider.setCustomParameters({
-  prompt: 'select_account'
+  prompt: 'select_account',
+  // Adding additional parameters to help with cookie issues
+  auth_type: 'rerequest',
+  access_type: 'offline'
 });
 
-export { db, auth, googleProvider }; 
+// Add popup settings to reduce cookie issues
+const popupConfig = {
+  width: 500,
+  height: 600,
+  location: 'yes',
+  resizable: 'yes',
+  statusbar: 'yes',
+  toolbar: 'no'
+};
+
+export { db, auth, googleProvider, popupConfig }; 

@@ -560,13 +560,17 @@ function App() {
       const result = await signInWithPopup(auth, googleProvider);
       if (result.user) {
         await createOrUpdateUser(result.user);
-        console.log('User signed in successfully');
+        console.log('User signed in successfully:', result.user.displayName);
       }
     } catch (error) {
       if (error.code === 'auth/popup-closed-by-user') {
-        console.log('Sign-in popup was closed');
+        console.log('Sign-in was cancelled by the user');
+      } else if (error.code === 'auth/third-party-cookies-blocked') {
+        // Handle third-party cookie blocking
+        console.error('Please enable third-party cookies or try a different browser');
+        // You might want to show a user-friendly message here
       } else {
-        console.error('Error signing in:', error);
+        console.error('Sign-in error:', error.code, error.message);
       }
     }
   };
