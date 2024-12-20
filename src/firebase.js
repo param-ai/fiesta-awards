@@ -3,9 +3,9 @@ import { getFirestore } from 'firebase/firestore';
 import { 
   getAuth, 
   GoogleAuthProvider, 
+  signInWithPopup,
   browserLocalPersistence, 
-  setPersistence,
-  indexedDBLocalPersistence
+  setPersistence 
 } from "firebase/auth";
 
 const firebaseConfig = {
@@ -17,28 +17,17 @@ const firebaseConfig = {
   appId: "1:512982533492:web:e75df8473c8051d8755821"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
-// Initialize Firestore and export
 const db = getFirestore(app);
-
-// Initialize Auth and export
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 
-// Configure persistence to use both indexedDB and local storage
-setPersistence(auth, indexedDBLocalPersistence)
-  .then(() => setPersistence(auth, browserLocalPersistence))
-  .catch((error) => {
-    console.error("Error setting persistence:", error);
-  });
+// Set persistence to LOCAL
+setPersistence(auth, browserLocalPersistence);
 
-// Configure Google provider settings
+// Configure Google provider
 googleProvider.setCustomParameters({
-  prompt: 'select_account',
-  // Add any additional OAuth 2.0 scopes if needed
-  scope: 'profile email'
+  prompt: 'select_account'
 });
 
 export { db, auth, googleProvider }; 

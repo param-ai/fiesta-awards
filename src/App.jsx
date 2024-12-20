@@ -557,9 +557,17 @@ function App() {
 
   const handleSignIn = async () => {
     try {
-      await signInWithRedirect(auth, googleProvider);
+      const result = await signInWithPopup(auth, googleProvider);
+      if (result.user) {
+        await createOrUpdateUser(result.user);
+        console.log('User signed in successfully');
+      }
     } catch (error) {
-      console.error('Error initiating sign in:', error);
+      if (error.code === 'auth/popup-closed-by-user') {
+        console.log('Sign-in popup was closed');
+      } else {
+        console.error('Error signing in:', error);
+      }
     }
   };
 
