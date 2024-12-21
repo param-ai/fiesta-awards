@@ -86,17 +86,16 @@ const categories = [
   'Best GTM/ Business Recruiter',
   'Best Leadership Recruiter',
   'Top TA Leader',
-  'Best Candidate Experience Specialist',
+  'Candidate Experience & Ops Pro',
   'Best Employer Branding Champion',
   'Best DEI Advocate',
-  'Best Referral Champion',
-  'Lifetime Achievement Award'
+  'Best Referral Champion'
 ];
 
-export const SelfNominationForm = ({ onNext }) => {
+export const SelfNominationForm = ({ onNext, currentUser }) => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
+    name: currentUser?.displayName || '',
+    email: currentUser?.email || '',
     linkedinUrl: '',
     phone: '',
     company: '',
@@ -121,6 +120,8 @@ export const SelfNominationForm = ({ onNext }) => {
             value={formData.name}
             onChange={(e) => setFormData({...formData, name: e.target.value})}
             placeholder="Enter your full name"
+            readOnly
+            style={{ opacity: 0.7, cursor: 'not-allowed' }}
           />
         </FormGroup>
 
@@ -132,6 +133,8 @@ export const SelfNominationForm = ({ onNext }) => {
             value={formData.email}
             onChange={(e) => setFormData({...formData, email: e.target.value})}
             placeholder="Enter your email address"
+            readOnly
+            style={{ opacity: 0.7, cursor: 'not-allowed' }}
           />
         </FormGroup>
 

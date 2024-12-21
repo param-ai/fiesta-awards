@@ -111,11 +111,11 @@ const ButtonGroup = styled.div`
 `
 
 const relationships = [
-  'I work with this person in the same department',
-  'I work with this person in a different department',
+  'I work/worked with this person in the same department',
+  'I work/worked with this person in a different department',
   'I am this person\'s manager',
   'I am a stakeholder who has worked with this person',
-  'I worked with this nominee as a candidate/job seeker',
+  'I work/worked with this nominee as a candidate/job seeker',
   'Other (Please specify)'
 ];
 
@@ -124,19 +124,18 @@ const categories = [
   'Best GTM/ Business Recruiter',
   'Best Leadership Recruiter',
   'Top TA Leader',
-  'Best Candidate Experience Specialist',
+  'Candidate Experience & Ops Pro',
   'Best Employer Branding Champion',
   'Best DEI Advocate',
-  'Best Referral Champion',
-  'Lifetime Achievement Award'
+  'Best Referral Champion'
 ];
 
-export const NominateOtherForm = ({ onNext }) => {
+export const NominateOtherForm = ({ onNext, currentUser }) => {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     nominator: {
-      name: '',
-      email: '',
+      name: currentUser?.displayName || '',
+      email: currentUser?.email || '',
       linkedinUrl: '',
       phone: '',
       company: '',
@@ -182,6 +181,8 @@ export const NominateOtherForm = ({ onNext }) => {
             nominator: { ...formData.nominator, name: e.target.value }
           })}
           placeholder="Enter your full name"
+          readOnly
+          style={{ opacity: 0.7, cursor: 'not-allowed' }}
         />
       </FormGroup>
 
@@ -196,6 +197,8 @@ export const NominateOtherForm = ({ onNext }) => {
             nominator: { ...formData.nominator, email: e.target.value }
           })}
           placeholder="Enter your email address"
+          readOnly
+          style={{ opacity: 0.7, cursor: 'not-allowed' }}
         />
       </FormGroup>
 
@@ -407,38 +410,17 @@ export const NominateOtherForm = ({ onNext }) => {
             />
           </FormGroup>
 
-          {formData.recommendation && !formData.hasChosenInfoOption && (
-            <FormGroup>
-              <Label>Would you like to add more details to strengthen this nomination?</Label>
-              <ButtonGroup>
-                <Button 
-                  type="button" 
-                  onClick={() => {
-                    setFormData(prev => ({ 
-                      ...prev, 
-                      wantsToAddInfo: true,
-                      hasChosenInfoOption: true 
-                    }));
-                    onNext({
-                      ...formData,
-                      wantsToAddInfo: true
-                    });
-                  }}
-                >
-                  Yes, Add More Details
-                </Button>
-                <Button 
-                  type="button"
-                  onClick={() => onNext({
-                    ...formData,
-                    wantsToAddInfo: false,
-                    hasChosenInfoOption: true
-                  })}
-                >
-                  No, Continue to Submit
-                </Button>
-              </ButtonGroup>
-            </FormGroup>
+          {formData.recommendation && (
+            <Button 
+              type="button"
+              onClick={() => onNext({
+                ...formData,
+                wantsToAddInfo: false,
+                hasChosenInfoOption: true
+              })}
+            >
+              Continue to Submit
+            </Button>
           )}
         </>
       )}

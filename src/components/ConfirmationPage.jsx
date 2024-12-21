@@ -54,12 +54,12 @@ export const ConfirmationPage = ({ onSubmit, formData, nominationType }) => {
     <Container>
       <Text>
         Please review your nomination details carefully before submitting.
-        {nominationType === 'other' && !formData.answers?.skipped && (
-          <p style={{ marginTop: '1rem', color: 'rgba(255, 255, 255, 0.7)' }}>
-            Thank you for providing additional information about the nominee.
-          </p>
-        )}
       </Text>
+      {nominationType === 'other' && !formData.answers?.skipped && (
+        <Text style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+          Thank you for providing additional information about the nominee.
+        </Text>
+      )}
       
       <CheckboxGroup>
         <Checkbox

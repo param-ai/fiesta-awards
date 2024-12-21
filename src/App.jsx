@@ -252,6 +252,20 @@ const UserImage = styled.img`
   object-fit: cover;
 `
 
+const UserInitials = styled.div`
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  font-weight: 500;
+`
+
 const UserName = styled.span`
   color: white;
   font-size: 0.9rem;
@@ -512,12 +526,12 @@ function AppContent() {
             createdAt: data.createdAt,
             totalVotes: data.totalVotes || 0,
             juryScore: data.juryScore || 0,
-            nominee: data.nominationData.nominee,
+            nominee: data.nominee,
             ...(data.type === 'other' && {
-              nominator: data.nominationData.nominator,
-              recommendation: data.nominationData.recommendation
+              nominator: data.nominator,
+              recommendation: data.recommendation
             }),
-            categoryQuestions: data.nominationData.categoryQuestions
+            categoryQuestions: data.categoryQuestions
           };
         }).filter(nomination => nomination.nominee);
         
@@ -675,7 +689,20 @@ function AppContent() {
             <>
               <NominateButton onClick={handleNominateClick}>Nominate</NominateButton>
               <UserInfo>
-                <UserImage src={user.photoURL} alt={user.displayName} />
+                {user.photoURL ? (
+                  <UserImage 
+                    src={user.photoURL} 
+                    alt={user.displayName}
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                      e.target.nextSibling.style.display = 'flex';
+                    }}
+                  />
+                ) : (
+                  <UserInitials>
+                    {user.displayName?.split(' ').map(n => n[0]).join('').toUpperCase() || '?'}
+                  </UserInitials>
+                )}
                 <UserName>{user.displayName}</UserName>
                 <SignInButton onClick={handleSignOut}>Sign Out</SignInButton>
               </UserInfo>

@@ -137,7 +137,7 @@ export const RulesPage = () => {
               <P>Celebrating visionary leaders driving innovation, efficiency, and team success in talent acquisition.</P>
             </li>
             <li>
-              <H3>Best Candidate Experience Specialist</H3>
+              <H3>Candidate Experience & Ops Pro</H3>
               <P>For professionals delivering exceptional candidate experiences, improving satisfaction scores, and reducing drop-offs.</P>
             </li>
             <li>
@@ -151,10 +151,6 @@ export const RulesPage = () => {
             <li>
               <H3>Best Referral Champion</H3>
               <P>Honoring individuals driving successful referral programs with measurable hiring and retention results.</P>
-            </li>
-            <li>
-              <H3>Lifetime Achievement Award</H3>
-              <P>Recognizing a career of exceptional contributions to recruitment and talent acquisition.</P>
             </li>
           </List>
         </Section>
@@ -217,12 +213,16 @@ export const RulesPage = () => {
 
         <Section>
           <H2>Scoring Formula</H2>
-          <P>The final score is calculated using a formula that factors in both jury votes and community upvotes.</P>
+          <P>The final score is calculated using a formula that factors in jury votes, community upvotes, and optional question responses.</P>
           
           <H3>Formula</H3>
-          <P>Total Score = (Total Jury Points × Total Jury Vote Count) + (Total Unique Upvotes × 10)</P>
+          <P>Total Score = (Total Jury Points × Total Jury Vote Count) + (Total Unique Upvotes × 10) + Number of Optional Questions Answered</P>
           
-          <P>For FiesTA Recruitment Awards, Each Unique Upvote will be upscaled by 10 points</P>
+          <P>For FiesTA Recruitment Awards:</P>
+          <List>
+            <li>Each Unique Upvote will be upscaled by 10 points</li>
+            <li>Each completed optional question adds 1 bonus point to the total score</li>
+          </List>
 
           <H3>Example Calculation</H3>
           <Table>
@@ -232,6 +232,7 @@ export const RulesPage = () => {
                 <th>Jury Points</th>
                 <th>Jury Vote Count</th>
                 <th>Community Upvotes</th>
+                <th>Optional Questions</th>
                 <th>Total Score</th>
               </tr>
             </thead>
@@ -241,14 +242,16 @@ export const RulesPage = () => {
                 <td>70</td>
                 <td>5</td>
                 <td>10</td>
-                <td>(70 × 5) + (10 × 10) = 450</td>
+                <td>3</td>
+                <td>(70 × 5) + (10 × 10) + 3 = 453</td>
               </tr>
               <tr>
                 <td>Nominee B</td>
                 <td>10</td>
                 <td>2</td>
                 <td>30</td>
-                <td>(10 × 2) + (30 × 10) = 320</td>
+                <td>0</td>
+                <td>(10 × 2) + (30 × 10) + 0 = 320</td>
               </tr>
             </tbody>
           </Table>

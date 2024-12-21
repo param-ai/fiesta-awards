@@ -38,29 +38,5 @@ export const juryMembers = [
     linkedIn: "https://www.linkedin.com/in/sharmarupali/",
     bio: "15+ years in HR, specializing in leadership hiring and 0-2 stage startups. Driving talent and culture at Z47. Passionate about building high-performance teams.",
     image: "https://media.licdn.com/dms/image/v2/D5603AQH9wA1lRqm8gQ/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1710941513860?e=1740009600&v=beta&t=tgiUWVdlFMIt7vSpPVJuWAksmyAYjwyxnBGzsgs0jwE"
-  },
-  {
-    name: "David Kim",
-    title: "Global Talent Director",
-    company: "Plaid",
-    linkedIn: "https://linkedin.com/in/davidkim",
-    bio: "Specializes in scaling recruitment operations in hyper-growth environments. Known for building strong employer brands and candidate experience.",
-    image: "https://randomuser.me/api/portraits/men/6.jpg"
-  },
-  {
-    name: "Emma Thompson",
-    title: "Senior Director of Talent",
-    company: "Coinbase",
-    linkedIn: "https://linkedin.com/in/emmathompson",
-    bio: "Led talent acquisition through multiple market cycles. Expert in crypto and fintech recruitment, focusing on building remote-first teams.",
-    image: "https://randomuser.me/api/portraits/women/7.jpg"
-  },
-  {
-    name: "Alex Foster",
-    title: "Head of Global Recruiting",
-    company: "Figma",
-    linkedIn: "https://linkedin.com/in/alexfoster",
-    bio: "Passionate about building diverse and inclusive teams. Pioneer in implementing innovative sourcing strategies and recruitment marketing.",
-    image: "https://randomuser.me/api/portraits/men/8.jpg"
   }
 ]; 

@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore } from 'firebase/firestore';
+import { getFirestore, enableIndexedDbPersistence } from 'firebase/firestore';
 import { 
   getAuth, 
   GoogleAuthProvider, 
@@ -17,9 +17,20 @@ const firebaseConfig = {
   appId: "1:512982533492:web:e75df8473c8051d8755821"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
+
+// Initialize Firestore with persistence
 const db = getFirestore(app);
+enableIndexedDbPersistence(db).catch((err) => {
+  console.error('Firestore persistence error:', err);
+});
+
+// Initialize Auth with persistence
 const auth = getAuth(app);
+setPersistence(auth, browserLocalPersistence).catch((err) => {
+  console.error('Auth persistence error:', err);
+});
 
 // Single provider instance
 const googleProvider = new GoogleAuthProvider();
@@ -30,26 +41,15 @@ googleProvider.setCustomParameters({
 const signInWithGoogle = async () => {
   try {
     console.log('1. Starting Google Sign In...');
-    // Add popup settings
-    const auth = getAuth();
-    auth.settings = {
-      appVerificationDisabledForTesting: true // Helps with popup issues
-    };
     
-    const provider = new GoogleAuthProvider();
-    provider.setCustomParameters({
-      prompt: 'select_account',
-      auth_type: 'rerequest',
-      access_type: 'offline'
-    });
-
-    const result = await signInWithPopup(auth, provider);
+    const result = await signInWithPopup(auth, googleProvider);
     console.log('2. Sign in successful:', result);
     return result;
   } catch (error) {
     if (error.code === 'auth/popup-closed-by-user') {
       console.log('User closed the popup window');
       // Handle gracefully - maybe show a message to user
+      return null;
     }
     console.error('Sign in error:', error);
     throw error;

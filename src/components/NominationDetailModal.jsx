@@ -299,51 +299,65 @@ export const NominationDetailModal = ({ nomination, onClose }) => {
 
           {categoryQuestions && (
             <>
-              {/* Numeric Questions */}
-              {categoryQuestions.numeric?.questions?.length > 0 && (
+              {/* Mandatory Questions */}
+              {categoryQuestions.mandatory?.length > 0 && (
                 <Section>
-                  <SectionTitle>Numeric Metrics</SectionTitle>
-                  <QuestionGrid>
-                    {categoryQuestions.numeric.questions.map((question, index) => (
-                      <QuestionCard key={`numeric-${index}`}>
-                        <Question>{question}</Question>
-                        <Answer>
-                          {categoryQuestions.numeric.answers?.[index]?.answer || 'N/A'}
-                        </Answer>
+                  <SectionTitle>Mandatory Questions</SectionTitle>
+                  {categoryQuestions.mandatory.map((questionData, index) => (
+                    <Section key={`mandatory-${index}`}>
+                      <SectionTitle>{questionData.topic}</SectionTitle>
+                      <QuestionCard>
+                        <Question>{questionData.question}</Question>
+                        
+                        <div style={{ marginTop: '1rem' }}>
+                          <h4 style={{ color: 'rgba(255, 255, 255, 0.7)', marginBottom: '0.5rem' }}>Situation</h4>
+                          <Answer>{questionData.situation || 'N/A'}</Answer>
+                        </div>
+
+                        <div style={{ marginTop: '1rem' }}>
+                          <h4 style={{ color: 'rgba(255, 255, 255, 0.7)', marginBottom: '0.5rem' }}>Behavior</h4>
+                          <Answer>{questionData.behavior || 'N/A'}</Answer>
+                        </div>
+
+                        <div style={{ marginTop: '1rem' }}>
+                          <h4 style={{ color: 'rgba(255, 255, 255, 0.7)', marginBottom: '0.5rem' }}>Impact</h4>
+                          <Answer>{questionData.impact || 'N/A'}</Answer>
+                        </div>
                       </QuestionCard>
-                    ))}
-                  </QuestionGrid>
+                    </Section>
+                  ))}
                 </Section>
               )}
 
-              {/* Rating Questions */}
-              {categoryQuestions.ratings?.questions?.length > 0 && (
+              {/* Optional Questions */}
+              {categoryQuestions.optional?.length > 0 && (
                 <Section>
-                  <SectionTitle>Ratings</SectionTitle>
-                  <QuestionGrid>
-                    {categoryQuestions.ratings.questions.map((question, index) => (
-                      <QuestionCard key={`rating-${index}`}>
-                        <Question>{question}</Question>
-                        <Answer>
-                          {categoryQuestions.ratings.answers?.[index]?.answer || 'N/A'}/10
-                        </Answer>
+                  <SectionTitle>Additional Questions</SectionTitle>
+                  {categoryQuestions.optional.map((questionData, index) => (
+                    <Section key={`optional-${index}`}>
+                      <SectionTitle>{questionData.topic}</SectionTitle>
+                      <QuestionCard>
+                        <Question>{questionData.question}</Question>
+                        
+                        <div style={{ marginTop: '1rem' }}>
+                          <h4 style={{ color: 'rgba(255, 255, 255, 0.7)', marginBottom: '0.5rem' }}>Situation</h4>
+                          <Answer>{questionData.situation || 'N/A'}</Answer>
+                        </div>
+
+                        <div style={{ marginTop: '1rem' }}>
+                          <h4 style={{ color: 'rgba(255, 255, 255, 0.7)', marginBottom: '0.5rem' }}>Behavior</h4>
+                          <Answer>{questionData.behavior || 'N/A'}</Answer>
+                        </div>
+
+                        <div style={{ marginTop: '1rem' }}>
+                          <h4 style={{ color: 'rgba(255, 255, 255, 0.7)', marginBottom: '0.5rem' }}>Impact</h4>
+                          <Answer>{questionData.impact || 'N/A'}</Answer>
+                        </div>
                       </QuestionCard>
-                    ))}
-                  </QuestionGrid>
+                    </Section>
+                  ))}
                 </Section>
               )}
-
-              {/* Text Questions */}
-              {categoryQuestions.textAnswers?.questions?.length > 0 && 
-                categoryQuestions.textAnswers.questions.map((question, index) => (
-                  <Section key={`text-${index}`}>
-                    <SectionTitle>{question}</SectionTitle>
-                    <Answer style={{ whiteSpace: 'pre-wrap' }}>
-                      {categoryQuestions.textAnswers.answers?.[index]?.answer || 'N/A'}
-                    </Answer>
-                  </Section>
-                ))
-              }
             </>
           )}
         </Content>

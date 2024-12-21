@@ -1,130 +1,114 @@
 import { db } from '../firebase';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, doc, setDoc, writeBatch } from 'firebase/firestore';
 
 export const saveNomination = async (nominationData, userId) => {
   try {
-    const nominationsRef = collection(db, 'nominations');
+    // Create a new batch
+    const batch = writeBatch(db);
+    const nominationRef = doc(collection(db, 'nominations'));
     
-    const nominationToSave = {
-      type: nominationData.nominationType,
-      status: 'pending',
-      createdAt: serverTimestamp(),
-      submittedBy: userId,
-      totalVotes: 0,
-      juryScore: 0,
-      voters: [],
-      juryVoters: [],
-      nominationData: nominationData.nominationType === 'self' ? 
-        {
-          nominee: {
-            name: nominationData.name,
-            email: nominationData.email,
-            linkedinUrl: nominationData.linkedinUrl,
-            phone: nominationData.phone,
-            company: nominationData.company,
-            jobTitle: nominationData.jobTitle,
-            category: nominationData.category
-          },
-          // Category questions and answers for self nominations are always included
-          categoryQuestions: {
-            numeric: {
-              questions: nominationData.answers.questions.numeric,
-              answers: [
-                {
-                  question: nominationData.answers.questions.numeric[0],
-                  answer: nominationData.answers.numeric1
-                },
-                {
-                  question: nominationData.answers.questions.numeric[1],
-                  answer: nominationData.answers.numeric2
-                }
-              ]
-            },
-            ratings: {
-              questions: nominationData.answers.questions.range,
-              answers: [
-                {
-                  question: nominationData.answers.questions.range[0],
-                  answer: nominationData.answers.range1
-                },
-                {
-                  question: nominationData.answers.questions.range[1],
-                  answer: nominationData.answers.range2
-                }
-              ]
-            },
-            textAnswers: {
-              questions: nominationData.answers.questions.text,
-              answers: [
-                {
-                  question: nominationData.answers.questions.text[0],
-                  answer: nominationData.answers.text1
-                },
-                {
-                  question: nominationData.answers.questions.text[1],
-                  answer: nominationData.answers.text2
-                }
-              ]
-            }
-          }
-        } 
-        : 
-        {
-          // Other nomination structure
-          nominator: {
-            name: nominationData.nominator.name,
-            email: nominationData.nominator.email,
-            linkedinUrl: nominationData.nominator.linkedinUrl,
-            phone: nominationData.nominator.phone,
-            company: nominationData.nominator.company,
-            jobTitle: nominationData.nominator.jobTitle
-          },
-          relationship: nominationData.relationship,
-          otherRelationship: nominationData.otherRelationship,
-          nominee: {
-            name: nominationData.nominee.name,
-            email: nominationData.nominee.email,
-            linkedinUrl: nominationData.nominee.linkedinUrl,
-            phone: nominationData.nominee.phone,
-            company: nominationData.nominee.company,
-            jobTitle: nominationData.nominee.jobTitle,
-            category: nominationData.nominee.category
-          },
-          recommendation: nominationData.recommendation,
-          // Include category questions only if they chose to add more info
-          ...(nominationData.wantsToAddInfo && !nominationData.answers?.skipped && {
-            categoryQuestions: {
-              numeric: {
-                questions: nominationData.answers.questions.numeric,
-                answers: {
-                  numeric1: nominationData.answers.numeric1,
-                  numeric2: nominationData.answers.numeric2
-                }
-              },
-              ratings: {
-                questions: nominationData.answers.questions.range,
-                answers: {
-                  rating1: nominationData.answers.range1,
-                  rating2: nominationData.answers.range2
-                }
-              },
-              textAnswers: {
-                questions: nominationData.answers.questions.text,
-                answers: {
-                  text1: nominationData.answers.text1,
-                  text2: nominationData.answers.text2
-                }
-              }
-            }
-          })
-        }
+    // Helper function to safely map answers
+    const mapAnswers = (answers = []) => {
+      if (!Array.isArray(answers)) return [];
+      return answers.map(answer => ({
+        topic: answer?.topic || '',
+        question: answer?.question || '',
+        situation: answer?.situation || '',
+        behavior: answer?.behavior || '',
+        impact: answer?.impact || ''
+      }));
     };
 
-    console.log('Saving nomination:', nominationToSave);
-    const docRef = await addDoc(nominationsRef, nominationToSave);
-    return docRef.id;
+    // Prepare category questions data with null checks
+    const prepareCategoryQuestions = (answers) => {
+      if (!answers || answers.skipped) return null;
+      return {
+        mandatory: mapAnswers(answers.mandatory),
+        optional: mapAnswers(answers.optional)
+      };
+    };
+
+    // Determine if this is a self nomination by checking if nominee data is nested
+    const isSelfNomination = !nominationData.nominee;
+
+    // Prepare the nomination data structure
+    const nominatorData = isSelfNomination
+      ? {
+          name: nominationData.name || '',
+          email: nominationData.email || '',
+          linkedinUrl: nominationData.linkedinUrl || '',
+          phone: nominationData.phone || '',
+          company: nominationData.company || '',
+          jobTitle: nominationData.jobTitle || ''
+        }
+      : {
+          name: nominationData.nominator?.name || '',
+          email: nominationData.nominator?.email || '',
+          linkedinUrl: nominationData.nominator?.linkedinUrl || '',
+          phone: nominationData.nominator?.phone || '',
+          company: nominationData.nominator?.company || '',
+          jobTitle: nominationData.nominator?.jobTitle || ''
+        };
+
+    const nomineeData = isSelfNomination
+      ? {
+          name: nominationData.name || '',
+          email: nominationData.email || '',
+          linkedinUrl: nominationData.linkedinUrl || '',
+          phone: nominationData.phone || '',
+          company: nominationData.company || '',
+          jobTitle: nominationData.jobTitle || '',
+          category: nominationData.category || ''
+        }
+      : {
+          name: nominationData.nominee?.name || '',
+          email: nominationData.nominee?.email || '',
+          linkedinUrl: nominationData.nominee?.linkedinUrl || '',
+          phone: nominationData.nominee?.phone || '',
+          company: nominationData.nominee?.company || '',
+          jobTitle: nominationData.nominee?.jobTitle || '',
+          category: nominationData.nominee?.category || ''
+        };
+
+    // Common nomination data structure
+    const nominationDoc = {
+      userId: userId || '',
+      type: isSelfNomination ? 'self' : 'other',
+      createdAt: serverTimestamp(),
+      nominator: nominatorData,
+      nominee: nomineeData,
+      relationship: isSelfNomination ? 'self' : (nominationData.relationship || ''),
+      otherRelationship: isSelfNomination ? '' : (nominationData.otherRelationship || ''),
+      recommendation: isSelfNomination ? '' : (nominationData.recommendation || ''),
+      categoryQuestions: prepareCategoryQuestions(nominationData.answers),
+      totalVotes: 0,
+      juryVotes: 0,
+      juryScore: 0,
+      status: 'pending'
+    };
+
+    console.log('Saving nomination:', nominationDoc); // For debugging
+    
+    // Add the nomination to the batch
+    batch.set(nominationRef, nominationDoc);
+    
+    // Commit the batch
+    await batch.commit();
+    
+    return nominationRef.id;
   } catch (error) {
     console.error('Error saving nomination:', error);
+    
+    // If it's a permission error, throw a more specific error
+    if (error.code === 'permission-denied') {
+      throw new Error('You do not have permission to submit nominations. Please sign in again.');
+    }
+    
+    // If it's a network error, throw a more specific error
+    if (error.code === 'unavailable') {
+      throw new Error('Network error. Please check your connection and try again.');
+    }
+    
     throw error;
   }
 }; 
