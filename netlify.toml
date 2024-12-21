@@ -4,6 +4,14 @@
   status = 200
 
 [[headers]]
+  # Apply headers to the index.html
+  for = "/index.html"
+  [headers.values]
+    Cross-Origin-Opener-Policy = "same-origin-allow-popups"
+    Cross-Origin-Embedder-Policy = "unsafe-none"
+
+[[headers]]
+  # Apply headers to all routes dynamically resolved
   for = "/*"
   [headers.values]
     Cross-Origin-Opener-Policy = "same-origin-allow-popups"
