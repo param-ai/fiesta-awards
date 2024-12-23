@@ -5,6 +5,72 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+
+  @media (max-width: 768px) {
+    gap: 1.25rem;
+  }
+`
+
+const QuestionHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+`
+
+const TextArea = styled.textarea`
+  width: 100%;
+  min-height: 120px;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  resize: vertical;
+  font-family: inherit;
+
+  @media (max-width: 768px) {
+    min-height: 100px;
+    padding: 0.875rem;
+    font-size: 16px; // Prevents iOS zoom
+  }
+`
+
+const ProgressBar = styled.div`
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+
+  @media (max-width: 768px) {
+    margin-bottom: 1.25rem;
+  }
+`
+
+const Button = styled.button`
+  padding: 0.875rem 1.5rem;
+  border-radius: 8px;
+  background: white;
+  color: black;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    padding: 0.75rem 1.25rem;
+  }
 `
 
 const FormGroup = styled.div`
@@ -70,55 +136,6 @@ const RatingValue = styled.span`
   color: white;
   font-size: 0.9rem;
   font-weight: 500;
-`
-
-const TextArea = styled.textarea`
-  padding: 0.8rem;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.05);
-  color: white;
-  min-height: 100px;
-  resize: vertical;
-  
-  &:focus {
-    outline: none;
-    border-color: rgba(255, 255, 255, 0.3);
-  }
-`
-
-const ButtonGroup = styled.div`
-  display: flex;
-  gap: 1rem;
-  margin-top: 1.5rem;
-  
-  button {
-    flex: 1;
-  }
-`
-
-const Button = styled.button`
-  padding: 0.875rem 1.5rem;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.08);
-  color: white;
-  cursor: pointer;
-  font-size: 0.9rem;
-  transition: all 0.2s ease;
-  
-  &:hover {
-    background: rgba(255, 255, 255, 0.12);
-    border-color: rgba(255, 255, 255, 0.2);
-  }
-
-  &:first-child {
-    background: transparent;
-    
-    &:hover {
-      background: rgba(255, 255, 255, 0.05);
-    }
-  }
 `
 
 const Text = styled.div`

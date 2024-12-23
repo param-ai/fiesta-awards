@@ -18,6 +18,10 @@ const Logo = styled.div`
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `
 
 const Title = styled.h1`
@@ -29,8 +33,8 @@ const Title = styled.h1`
   cursor: pointer;
   transition: opacity 0.2s ease;
   
-  &:hover {
-    opacity: 0.8;
+  @media (max-width: 768px) {
+    font-size: 1.2rem;
   }
 `
 
@@ -43,6 +47,14 @@ const Countdown = styled.p`
   min-width: 380px;
   text-align: left;
   white-space: nowrap;
+
+  @media (max-width: 768px) {
+    min-width: unset;
+    width: 100%;
+    font-size: 0.75rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 `
 
 const SearchBar = styled.input`
@@ -55,6 +67,12 @@ const SearchBar = styled.input`
   color: white;
   font-size: 0.9rem;
   transition: all 0.2s ease;
+
+  @media (max-width: 768px) {
+    max-width: none;
+    padding: 0.7rem 1rem;
+    font-size: 0.85rem;
+  }
 
   &:focus {
     outline: none;
@@ -100,11 +118,10 @@ const UserInfo = styled.div`
   max-width: 300px;
 
   @media (max-width: 768px) {
-    padding: 0.5rem;
-    gap: 0.75rem;
-    justify-content: space-between;
-    width: 100%;
-    max-width: none;
+    padding: 0.3rem;
+    gap: 0.5rem;
+    background: transparent;
+    max-width: fit-content;
   }
 `
 
@@ -160,16 +177,27 @@ const NominateButton = styled.button`
 const HeaderButtons = styled.div`
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 1rem;
   margin-left: auto;
-  
-  & > *:not(:last-child)::after {
-    content: '';
-    position: absolute;
-    right: -7.5px;
-    height: 20px;
-    width: 1px;
-    background: rgba(255, 255, 255, 0.1);
+
+  @media (max-width: 768px) {
+    width: 100%;
+    justify-content: space-between;
+    gap: 0.5rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 0.25rem;
+    
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    
+    button {
+      flex: 1;
+      min-width: max-content;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.85rem;
+    }
   }
 `
 
@@ -184,63 +212,17 @@ const Header = styled.header`
   background-color: #121212;
   z-index: 100;
   backdrop-filter: blur(8px);
-  margin-bottom: 2rem;
 
   @media (max-width: 768px) {
     flex-direction: column;
     padding: 1rem;
-    gap: 0.75rem;
-    
-    ${HeaderButtons} {
-      width: 100%;
-      justify-content: center;
-    }
-    
-    ${Logo} {
-      width: 100%;
-      align-items: center;
-      text-align: center;
-    }
-
-    ${Title} {
-      font-size: 1.5rem;
-    }
-
-    ${Countdown} {
-      min-width: unset;
-      width: 100%;
-      text-align: center;
-      font-size: 0.75rem;
-    }
-    
-    ${SearchBar} {
-      width: 100%;
-      max-width: none;
-    }
-
-    ${UserInfo} {
-      width: 100%;
-      max-width: none;
-      justify-content: center;
-    }
-
-    ${JuryButton}, ${NominateButton} {
-      padding: 0.6rem 1rem;
-      font-size: 0.85rem;
-    }
-
-    ${SignInButton} {
-      width: 100%;
-      justify-content: center;
-    }
+    gap: 1rem;
   }
 `
 
 const Container = styled.div`
-  padding: 2rem;
-  padding-top: 0;
-  background-color: #121212;
   min-height: 100vh;
+  background: #121212;
 `
 
 const UserImage = styled.img`
@@ -276,6 +258,10 @@ const UserName = styled.span`
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 150px;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 `
 
 const NominationsGrid = styled.div`
@@ -411,41 +397,6 @@ const ModalContent = styled.div`
   }
 `
 
-const MobileOverlay = styled.div`
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: #121212;
-  z-index: 9999;
-  padding: 2rem;
-  text-align: center;
-  color: white;
-  
-  @media (max-width: 768px) {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-`
-
-const MobileMessage = styled.h2`
-  font-size: 1.5rem;
-  color: white;
-  margin-bottom: 1rem;
-  font-weight: 500;
-`
-
-const MobileSubtext = styled.p`
-  font-size: 1rem;
-  color: rgba(255, 255, 255, 0.7);
-  line-height: 1.5;
-  margin-top: 1rem;
-`
-
 const EmojiContainer = styled.div`
   font-size: 3rem;
   margin: 2rem 0;
@@ -454,6 +405,24 @@ const EmojiContainer = styled.div`
 const LeaderboardButton = styled(JuryButton)`
   &::before {
     content: '🏆';
+  }
+`
+
+const Button = styled.button`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  @media (max-width: 768px) {
+    width: 100%;
   }
 `
 
@@ -655,16 +624,6 @@ function AppContent() {
 
   return (
     <Container>
-      <MobileOverlay>
-        <MobileMessage>FiesTA Awwards is best suited for desktop view</MobileMessage>
-        <EmojiContainer>🏆</EmojiContainer>
-        <MobileSubtext>
-          These amazing recruiters deserve a bigger space to shine! ✨
-          <br /><br />
-          Please visit us on your desktop for the full experience.
-        </MobileSubtext>
-      </MobileOverlay>
-
       <Header>
         <Logo>
           <Title onClick={() => navigate('/')}>FiesTA Awwards</Title>

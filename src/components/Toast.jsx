@@ -37,6 +37,13 @@ const ToastContainer = styled.div`
   align-items: center;
   gap: 0.5rem;
   
+  @media (max-width: 768px) {
+    bottom: 1rem;
+    padding: 0.875rem 1.5rem;
+    width: calc(100% - 2rem);
+    justify-content: center;
+  }
+  
   &::before {
     content: '🎉';
   }

@@ -22,8 +22,7 @@ const ModalOverlay = styled.div`
   padding: 1rem;
 
   @media (max-width: 768px) {
-    padding: 0;
-    align-items: flex-end;
+    padding: 0.5rem;
   }
 `
 
@@ -38,10 +37,8 @@ const ModalContent = styled.div`
   padding: 2rem;
 
   @media (max-width: 768px) {
+    padding: 1.25rem;
     max-height: 95vh;
-    padding: 1.5rem;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
   }
 `
 
@@ -150,7 +147,11 @@ const Form = styled.form`
 const FormGroup = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.375rem;
+  gap: 0.5rem;
+
+  @media (max-width: 768px) {
+    gap: 0.375rem;
+  }
 `
 
 const Label = styled.label`
@@ -160,16 +161,15 @@ const Label = styled.label`
 `
 
 const Input = styled.input`
-  padding: 0.7rem;
+  padding: 0.8rem;
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   background: rgba(255, 255, 255, 0.05);
   color: white;
-  font-size: 0.9rem;
   
-  &:focus {
-    outline: none;
-    border-color: rgba(255, 255, 255, 0.3);
+  @media (max-width: 768px) {
+    padding: 0.7rem;
+    font-size: 16px; // Prevents iOS zoom on focus
   }
 `
 
@@ -393,6 +393,24 @@ const OptionalButton = styled(SubmitButton)`
     cursor: not-allowed;
     transform: none;
     background: transparent;
+  }
+`
+
+const ButtonGroup = styled.div`
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.5rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  button {
+    @media (max-width: 768px) {
+      width: 100%;
+    }
   }
 `
 

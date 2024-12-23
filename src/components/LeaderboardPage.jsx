@@ -7,6 +7,10 @@ import { FaLinkedin, FaTrophy, FaMedal, FaAward } from 'react-icons/fa';
 const LeaderboardContainer = styled.div`
   padding: 2rem;
   margin: 0 auto;
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
 `
 
 const TableContainer = styled.div`
@@ -14,6 +18,11 @@ const TableContainer = styled.div`
   background: rgba(255, 255, 255, 0.02);
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.1);
+
+  @media (max-width: 768px) {
+    border-radius: 8px;
+    margin: 0 -0.75rem;
+  }
 `
 
 const TableWrapper = styled.div`
@@ -25,21 +34,17 @@ const TableScroll = styled.div`
   overflow-y: auto;
   max-height: calc(100vh - 300px);
   
-  /* Scrollbar styling */
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
-  
+  /* Hide scrollbar for Chrome, Safari and Opera */
   &::-webkit-scrollbar {
-    width: 6px;
+    display: none;
   }
   
-  &::-webkit-scrollbar-track {
-    background: transparent;
-  }
+  /* Hide scrollbar for IE, Edge and Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
   
-  &::-webkit-scrollbar-thumb {
-    background-color: rgba(255, 255, 255, 0.3);
-    border-radius: 3px;
+  @media (max-width: 768px) {
+    max-height: calc(100vh - 200px); // Adjusted for mobile
   }
 `
 
@@ -89,6 +94,11 @@ const CategoryTabs = styled.div`
   gap: 1rem;
   margin-bottom: 1rem;
   width: 100%;
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
 `
 
 const CategoryTab = styled.button`
@@ -121,6 +131,11 @@ const TopSection = styled.div`
   gap: 1rem;
   margin-bottom: 1.5rem;
   width: 100%;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
 `
 
 const SearchSection = styled.div`
@@ -129,6 +144,12 @@ const SearchSection = styled.div`
   gap: 1rem;
   width: 100%;
   max-width: 500px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 0.75rem;
+    max-width: none;
+  }
 `
 
 const SearchInput = styled.input`
@@ -284,6 +305,164 @@ const getRankIcon = (rank) => {
   }
 };
 
+const MobileFilters = styled.div`
+  display: none;
+
+  @media (max-width: 768px) {
+    display: flex;
+    gap: 0.5rem;
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+`
+
+const FilterSelect = styled.select`
+  flex: 1;
+  padding: 0.5rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  font-size: 0.875rem;
+`
+
+const MobileLeaderCard = styled.div`
+  display: none;
+
+  @media (max-width: 768px) {
+    display: flex;
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+  }
+`
+
+const CardHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+`
+
+const Rank = styled.div`
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: ${props => props.$top3 ? '#ffd700' : 'white'};
+`
+
+const Stats = styled.div`
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.7);
+`
+
+const Table = styled.table`
+  @media (max-width: 768px) {
+    display: none;
+  }
+`
+
+const MobileCardList = styled.div`
+  display: none;
+  
+  @media (max-width: 768px) {
+    display: block;
+  }
+`
+
+const MobileFilterRow = styled.div`
+  display: none;
+
+  @media (max-width: 768px) {
+    display: flex;
+    gap: 0.5rem;
+    width: 100%;
+    margin-bottom: 1.5rem;
+    padding: 0 0.5rem;
+  }
+`
+
+const MobileSearchBar = styled.input`
+  flex: 2;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  font-size: 0.875rem;
+`
+
+const MobileFilter = styled.select`
+  flex: 1;
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  font-size: 0.875rem;
+`
+
+const LeaderCard = styled.div`
+  display: none;
+
+  @media (max-width: 768px) {
+    display: flex;
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+`
+
+const CardTop = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+`
+
+const RankAndName = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+`
+
+const MobileRank = styled.div`
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: ${props => {
+    if (props.$rank === 1) return '#FFD700';
+    if (props.$rank === 2) return '#C0C0C0';
+    if (props.$rank === 3) return '#CD7F32';
+    return 'white';
+  }};
+`
+
+const MobileContent = styled.div`
+  display: none;
+
+  @media (max-width: 768px) {
+    display: block;
+    padding: 0.5rem;
+  }
+`
+
+const DesktopContent = styled.div`
+  @media (max-width: 768px) {
+    display: none;
+  }
+`
+
 export const LeaderboardPage = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [nominations, setNominations] = useState([]);
@@ -352,114 +531,171 @@ export const LeaderboardPage = () => {
 
   return (
     <LeaderboardContainer>
-      <TopSection>
-        <SearchSection>
-          <CategoryTab 
-            $active={selectedCategory === ""}
-            onClick={() => setSelectedCategory("")}
-            style={{ width: '150px' }}
-          >
-            All Categories
-          </CategoryTab>
-          <SearchInput
+      {/* Desktop View */}
+      <DesktopContent>
+        <TopSection>
+          <SearchSection>
+            <CategoryTab 
+              $active={selectedCategory === ""}
+              onClick={() => setSelectedCategory("")}
+              style={{ width: '150px' }}
+            >
+              All Categories
+            </CategoryTab>
+            <SearchInput
+              type="text"
+              placeholder="Search nominees..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </SearchSection>
+        </TopSection>
+        
+        <CategoryTabs>
+          {categories.slice(0, 4).map(category => (
+            <CategoryTab
+              key={category}
+              $active={selectedCategory === category}
+              onClick={() => setSelectedCategory(category)}
+            >
+              {category}
+            </CategoryTab>
+          ))}
+        </CategoryTabs>
+        
+        <CategoryTabs>
+          {categories.slice(4, 8).map(category => (
+            <CategoryTab
+              key={category}
+              $active={selectedCategory === category}
+              onClick={() => setSelectedCategory(category)}
+            >
+              {category}
+            </CategoryTab>
+          ))}
+        </CategoryTabs>
+
+        <TableContainer>
+          <TableWrapper>
+            <TableHeader>
+              <table>
+                <tr>
+                  <th style={{ width: '100px' }}>Rank</th>
+                  <th style={{ width: '250px' }}>Nominee</th>
+                  <th style={{ width: '200px' }}>Category</th>
+                  <th style={{ width: '200px' }}>Company</th>
+                  <th style={{ width: '150px' }}>Community Votes</th>
+                  <th style={{ width: '150px' }}>Jury Votes</th>
+                  <th style={{ width: '150px' }}>Total Score</th>
+                </tr>
+              </table>
+            </TableHeader>
+            <TableScroll>
+              <LeaderboardTable>
+                <tbody>
+                  {filteredAndSortedNominations.map((nomination, index) => (
+                    <tr key={nomination.id}>
+                      <td style={{ width: '100px' }}>
+                        <RankBadge $rank={index + 1}>
+                          {getRankIcon(index + 1)}
+                        </RankBadge>
+                      </td>
+                      <td style={{ width: '250px' }}>
+                        <NomineeInfo>
+                          <NomineeName>
+                            {nomination.nominee.name}
+                            {nomination.nominee.linkedinUrl && (
+                              <LinkedInButton 
+                                href={nomination.nominee.linkedinUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <FaLinkedin />
+                              </LinkedInButton>
+                            )}
+                          </NomineeName>
+                          <JobTitle>{nomination.nominee.jobTitle}</JobTitle>
+                        </NomineeInfo>
+                      </td>
+                      <td style={{ width: '200px' }}>{nomination.category}</td>
+                      <td style={{ width: '200px' }}>{nomination.nominee.company}</td>
+                      <td style={{ width: '150px' }}>
+                        <VoteChip $type="community">
+                          {nomination.communityVotes}
+                        </VoteChip>
+                      </td>
+                      <td style={{ width: '150px' }}>
+                        <VoteChip $type="jury">
+                          {nomination.juryVoteCount}
+                        </VoteChip>
+                      </td>
+                      <td style={{ width: '150px' }}>
+                        <ScoreChip>
+                          {nomination.totalScore}
+                        </ScoreChip>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </LeaderboardTable>
+            </TableScroll>
+          </TableWrapper>
+        </TableContainer>
+      </DesktopContent>
+
+      {/* Mobile View */}
+      <MobileContent>
+        <MobileFilterRow>
+          <MobileSearchBar
             type="text"
             placeholder="Search nominees..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-        </SearchSection>
-      </TopSection>
-      
-      <CategoryTabs>
-        {categories.slice(0, 4).map(category => (
-          <CategoryTab
-            key={category}
-            $active={selectedCategory === category}
-            onClick={() => setSelectedCategory(category)}
+          <MobileFilter
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
           >
-            {category}
-          </CategoryTab>
-        ))}
-      </CategoryTabs>
-      
-      <CategoryTabs>
-        {categories.slice(4, 8).map(category => (
-          <CategoryTab
-            key={category}
-            $active={selectedCategory === category}
-            onClick={() => setSelectedCategory(category)}
-          >
-            {category}
-          </CategoryTab>
-        ))}
-      </CategoryTabs>
+            <option value="">All Categories</option>
+            {categories.map(cat => (
+              <option key={cat} value={cat}>{cat}</option>
+            ))}
+          </MobileFilter>
+        </MobileFilterRow>
 
-      <TableContainer>
-        <TableWrapper>
-          <TableHeader>
-            <table>
-              <tr>
-                <th style={{ width: '100px' }}>Rank</th>
-                <th style={{ width: '250px' }}>Nominee</th>
-                <th style={{ width: '200px' }}>Category</th>
-                <th style={{ width: '200px' }}>Company</th>
-                <th style={{ width: '150px' }}>Community Votes</th>
-                <th style={{ width: '150px' }}>Jury Votes</th>
-                <th style={{ width: '150px' }}>Total Score</th>
-              </tr>
-            </table>
-          </TableHeader>
-          <TableScroll>
-            <LeaderboardTable>
-              <tbody>
-                {filteredAndSortedNominations.map((nomination, index) => (
-                  <tr key={nomination.id}>
-                    <td style={{ width: '100px' }}>
-                      <RankBadge $rank={index + 1}>
-                        {getRankIcon(index + 1)}
-                      </RankBadge>
-                    </td>
-                    <td style={{ width: '250px' }}>
-                      <NomineeInfo>
-                        <NomineeName>
-                          {nomination.nominee.name}
-                          {nomination.nominee.linkedinUrl && (
-                            <LinkedInButton 
-                              href={nomination.nominee.linkedinUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              <FaLinkedin />
-                            </LinkedInButton>
-                          )}
-                        </NomineeName>
-                        <JobTitle>{nomination.nominee.jobTitle}</JobTitle>
-                      </NomineeInfo>
-                    </td>
-                    <td style={{ width: '200px' }}>{nomination.category}</td>
-                    <td style={{ width: '200px' }}>{nomination.nominee.company}</td>
-                    <td style={{ width: '150px' }}>
-                      <VoteChip $type="community">
-                        {nomination.communityVotes}
-                      </VoteChip>
-                    </td>
-                    <td style={{ width: '150px' }}>
-                      <VoteChip $type="jury">
-                        {nomination.juryVoteCount}
-                      </VoteChip>
-                    </td>
-                    <td style={{ width: '150px' }}>
-                      <ScoreChip>
-                        {nomination.totalScore}
-                      </ScoreChip>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </LeaderboardTable>
-          </TableScroll>
-        </TableWrapper>
-      </TableContainer>
+        {filteredAndSortedNominations.map((nom, index) => (
+          <LeaderCard key={nom.id}>
+            <CardTop>
+              <RankAndName>
+                <MobileRank $rank={index + 1}>
+                  {index < 3 ? ['🥇', '🥈', '🥉'][index] : `#${index + 1}`}
+                </MobileRank>
+                <div>
+                  <h3 style={{ margin: '0 0 0.25rem 0', color: 'white' }}>
+                    {nom.nominee.name}
+                  </h3>
+                  <div style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.6)' }}>
+                    {nom.nominee.company} • {nom.category}
+                  </div>
+                </div>
+              </RankAndName>
+              <LinkedInButton 
+                href={nom.nominee.linkedinUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FaLinkedin />
+              </LinkedInButton>
+            </CardTop>
+            
+            <Stats>
+              <div>🏆 {nom.totalScore} points</div>
+              <div>👥 {nom.communityVotes} votes</div>
+              <div>⭐ {nom.juryVoteCount} jury</div>
+            </Stats>
+          </LeaderCard>
+        ))}
+      </MobileContent>
     </LeaderboardContainer>
   );
 }; 

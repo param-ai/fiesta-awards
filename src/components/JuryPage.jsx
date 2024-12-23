@@ -5,6 +5,10 @@ import { useNavigate } from 'react-router-dom';
 
 const PageContainer = styled.div`
   padding: 2rem;
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
 `
 
 const BackButton = styled.button`
@@ -21,6 +25,12 @@ const BackButton = styled.button`
   margin-bottom: 2rem;
   transition: all 0.2s ease;
 
+  @media (max-width: 768px) {
+    margin-bottom: 1.5rem;
+    width: 100%;
+    justify-content: center;
+  }
+
   &:hover {
     background: rgba(255, 255, 255, 0.1);
     transform: translateX(-2px);
@@ -32,12 +42,23 @@ const PageTitle = styled.h1`
   font-size: 2rem;
   font-weight: 500;
   margin: 0 0 2rem 0;
+
+  @media (max-width: 768px) {
+    font-size: 1.75rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
 `
 
 const JuryGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
   gap: 2rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
 `
 
 const JuryCard = styled.div`
@@ -60,6 +81,11 @@ const CardHeader = styled.div`
   gap: 1.25rem;
   align-items: flex-start;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+
+  @media (max-width: 768px) {
+    padding: 1.25rem;
+    gap: 1rem;
+  }
 `
 
 const Avatar = styled.img`
@@ -67,6 +93,11 @@ const Avatar = styled.img`
   height: 80px;
   border-radius: 12px;
   object-fit: cover;
+
+  @media (max-width: 768px) {
+    width: 70px;
+    height: 70px;
+  }
 `
 
 const HeaderInfo = styled.div`
@@ -78,6 +109,10 @@ const Name = styled.h3`
   font-size: 1.25rem;
   font-weight: 500;
   margin: 0 0 0.5rem 0;
+
+  @media (max-width: 768px) {
+    font-size: 1.1rem;
+  }
 `
 
 const Title = styled.div`
@@ -94,6 +129,10 @@ const Company = styled.div`
 
 const CardBody = styled.div`
   padding: 1.5rem;
+
+  @media (max-width: 768px) {
+    padding: 1.25rem;
+  }
 `
 
 const Bio = styled.p`
@@ -101,6 +140,11 @@ const Bio = styled.p`
   font-size: 0.95rem;
   line-height: 1.6;
   margin: 0 0 1.5rem 0;
+
+  @media (max-width: 768px) {
+    font-size: 0.9rem;
+    margin-bottom: 1.25rem;
+  }
 `
 
 const LinkedInButton = styled.a`
@@ -115,6 +159,12 @@ const LinkedInButton = styled.a`
   text-decoration: none;
   font-size: 0.9rem;
   transition: all 0.2s ease;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    justify-content: center;
+    padding: 0.875rem;
+  }
 
   &:hover {
     background: rgba(255, 255, 255, 0.1);

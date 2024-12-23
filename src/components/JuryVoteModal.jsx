@@ -12,6 +12,10 @@ const ModalOverlay = styled.div`
   justify-content: center;
   align-items: center;
   z-index: 1000;
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
 `
 
 const ModalContent = styled.div`
@@ -22,6 +26,11 @@ const ModalContent = styled.div`
   max-width: 500px;
   position: relative;
   border: 1px solid rgba(255, 255, 255, 0.1);
+
+  @media (max-width: 768px) {
+    padding: 1.5rem;
+    width: 100%;
+  }
 `
 
 const Title = styled.h2`
@@ -60,26 +69,30 @@ const Slider = styled.input`
 
 const Points = styled.div`
   text-align: center;
-  color: #ffd54f;
   font-size: 2rem;
+  color: white;
   margin: 1rem 0;
   font-weight: 500;
+
+  @media (max-width: 768px) {
+    font-size: 1.75rem;
+  }
 `
 
 const SubmitButton = styled.button`
   width: 100%;
   padding: 1rem;
   border-radius: 12px;
-  border: none;
-  background: #ffd54f;
-  color: #121212;
-  font-size: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   cursor: pointer;
+  font-size: 1rem;
   transition: all 0.2s ease;
-  
-  &:hover {
-    opacity: 0.9;
-    transform: translateY(-2px);
+
+  @media (max-width: 768px) {
+    padding: 0.875rem;
+    font-size: 0.95rem;
   }
 `
 

@@ -7,7 +7,7 @@ const PageContainer = styled.div`
   color: rgba(255, 255, 255, 0.9);
   
   @media (max-width: 768px) {
-    padding: 1rem;
+    padding: 1rem 0.75rem;
   }
 `
 
@@ -15,6 +15,10 @@ const Content = styled.div`
   max-width: 800px;
   margin: 0 auto;
   font-size: 0.95rem;
+
+  @media (max-width: 768px) {
+    font-size: 0.9rem;
+  }
 `
 
 const Section = styled.section`
@@ -30,6 +34,11 @@ const H1 = styled.h1`
   margin-bottom: 1.5rem;
   color: rgba(255, 255, 255, 0.95);
   font-weight: 500;
+
+  @media (max-width: 768px) {
+    font-size: 1.5rem;
+    margin-bottom: 1.25rem;
+  }
 `
 
 const H2 = styled.h2`
@@ -95,6 +104,12 @@ const Table = styled.table`
     display: block;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+    font-size: 0.85rem;
+    
+    th, td {
+      padding: 0.6rem;
+      white-space: nowrap;
+    }
   }
 `
 

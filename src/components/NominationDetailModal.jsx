@@ -13,6 +13,11 @@ const ModalOverlay = styled.div`
   align-items: center;
   z-index: 1000;
   padding: 2rem;
+
+  @media (max-width: 768px) {
+    padding: 0;
+    align-items: flex-end;
+  }
 `
 
 const ModalContent = styled.div`
@@ -37,6 +42,13 @@ const ModalContent = styled.div`
     background: rgba(255, 255, 255, 0.1);
     border-radius: 4px;
   }
+
+  @media (max-width: 768px) {
+    max-height: 85vh;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border: none;
+  }
 `
 
 const Header = styled.div`
@@ -46,6 +58,81 @@ const Header = styled.div`
   top: 0;
   background: #1a1a1a;
   z-index: 1;
+
+  @media (max-width: 768px) {
+    padding: 1.25rem;
+  }
+`
+
+const NameRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+`
+
+const Name = styled.h2`
+  color: white;
+  font-size: 1.75rem;
+  font-weight: 500;
+  margin: 0;
+
+  @media (max-width: 768px) {
+    font-size: 1.5rem;
+  }
+`
+
+const CompanyInfo = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1rem;
+
+  @media (max-width: 768px) {
+    font-size: 0.9rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+`
+
+const Section = styled.div`
+  margin-bottom: 2rem;
+
+  @media (max-width: 768px) {
+    margin-bottom: 1.5rem;
+  }
+`
+
+const SectionTitle = styled.h3`
+  color: white;
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin: 0 0 1rem 0;
+
+  @media (max-width: 768px) {
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+  }
+`
+
+const Answer = styled.div`
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.6;
+  font-size: 0.95rem;
+  white-space: pre-wrap;
+
+  @media (max-width: 768px) {
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
 `
 
 const CloseButton = styled.button`
@@ -65,40 +152,50 @@ const CloseButton = styled.button`
   &:hover {
     color: white;
   }
+
+  @media (max-width: 768px) {
+    top: 1rem;
+    right: 1rem;
+  }
 `
 
 const ProfileHeader = styled.div`
   display: flex;
   gap: 1.5rem;
   align-items: flex-start;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 1rem;
+  }
 `
 
 const MainInfo = styled.div`
   flex: 1;
-`
 
-const Name = styled.h2`
-  color: white;
-  font-size: 1.75rem;
-  font-weight: 500;
-  margin: 0 0 0.5rem 0;
-`
-
-const CompanyInfo = styled.div`
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 1rem;
-  margin-bottom: 1rem;
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `
 
 const Badges = styled.div`
   display: flex;
   gap: 0.75rem;
+
+  @media (max-width: 768px) {
+    flex-wrap: wrap;
+  }
 `
 
 const Badge = styled.span`
   padding: 0.375rem 1rem;
   border-radius: 12px;
   font-size: 0.875rem;
+
+  @media (max-width: 768px) {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.8rem;
+  }
 `
 
 const CategoryBadge = styled(Badge)`
@@ -121,6 +218,14 @@ const Stats = styled.div`
   padding: 1rem 1.5rem;
   background: rgba(255, 255, 255, 0.02);
   border-radius: 12px;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    justify-content: space-around;
+    padding: 0.875rem;
+    gap: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+  }
 `
 
 const StatItem = styled.div`
@@ -130,6 +235,10 @@ const StatItem = styled.div`
   color: rgba(255, 255, 255, 0.7);
   font-size: 0.875rem;
 
+  @media (max-width: 768px) {
+    font-size: 0.8rem;
+  }
+
   span {
     color: white;
     font-weight: 500;
@@ -138,30 +247,9 @@ const StatItem = styled.div`
 
 const Content = styled.div`
   padding: 2rem;
-`
 
-const Section = styled.div`
-  margin-bottom: 2.5rem;
-
-  &:last-child {
-    margin-bottom: 0;
-  }
-`
-
-const SectionTitle = styled.h3`
-  color: white;
-  font-size: 1.25rem;
-  font-weight: 500;
-  margin: 0 0 1.5rem 0;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-
-  &::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: rgba(255, 255, 255, 0.06);
+  @media (max-width: 768px) {
+    padding: 1.25rem;
   }
 `
 
@@ -202,6 +290,11 @@ const QuestionGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1.5rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
 `
 
 const QuestionCard = styled.div`
@@ -217,10 +310,40 @@ const Question = styled.div`
   margin-bottom: 0.75rem;
 `
 
-const Answer = styled.div`
-  color: white;
-  font-size: 1rem;
-  line-height: 1.5;
+const HeaderButtons = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  @media (max-width: 768px) {
+    gap: 0.5rem;
+    
+    button {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.8rem;
+      min-width: auto; // Allow buttons to be smaller
+      white-space: nowrap;
+    }
+  }
+`
+
+const HeaderButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  @media (max-width: 768px) {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+  }
 `
 
 const renderAnswers = (section) => {
@@ -247,10 +370,12 @@ export const NominationDetailModal = ({ nomination, onClose }) => {
           
           <ProfileHeader>
             <MainInfo>
-              <Name>{nominee.name}</Name>
-              <CompanyInfo>
-                {nominee.company} • {nominee.jobTitle}
-              </CompanyInfo>
+              <NameRow>
+                <Name>{nominee.name}</Name>
+                <CompanyInfo>
+                  {nominee.company} • {nominee.jobTitle}
+                </CompanyInfo>
+              </NameRow>
               <Badges>
                 <TypeBadge $type={type}>
                   {type === 'self' ? '🎯 Self Nominated' : '👥 Peer Nominated'}
