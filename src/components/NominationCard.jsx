@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { FaLinkedin, FaThumbsUp } from 'react-icons/fa';
+import { FaLinkedin, FaThumbsUp, FaShare } from 'react-icons/fa';
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { submitVote } from '../services/votingService';
@@ -64,6 +64,9 @@ const Name = styled.h3`
   font-size: 1.25rem;
   font-weight: 500;
   margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 
   @media (max-width: 768px) {
     font-size: 1.1rem;
@@ -87,6 +90,12 @@ const NominationType = styled.span`
     padding: 0.25rem 0.75rem;
     font-size: 0.75rem;
   }
+`
+
+const NominationTypeGroup = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 `
 
 const CompanyInfo = styled.div`
@@ -243,6 +252,50 @@ const Tooltip = styled.div`
   }
 `
 
+const DesktopShareButton = styled.button`
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.75rem;
+
+  @media (min-width: 769px) {
+    display: flex;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+`
+
+const MobileShareButton = styled(Button)`
+  @media (min-width: 769px) {
+    display: none;
+  }
+`
+
+const ShareToastMessage = styled.div`
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  z-index: 1000;
+  opacity: ${props => props.$show ? 1 : 0};
+  transition: opacity 0.3s ease;
+`
+
 export const NominationCard = ({ nomination }) => {
   const { currentUser, userDetails } = useAuth();
   const [hasVoted, setHasVoted] = useState(false);
@@ -251,6 +304,7 @@ export const NominationCard = ({ nomination }) => {
   const [showJuryModal, setShowJuryModal] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [isToastHiding, setIsToastHiding] = useState(false);
+  const [showShareToast, setShowShareToast] = useState(false);
 
   useEffect(() => {
     if (currentUser && userDetails) {
@@ -326,6 +380,20 @@ export const NominationCard = ({ nomination }) => {
   // Add state for modal
   const [showDetail, setShowDetail] = useState(false);
 
+  const handleShare = async (e) => {
+    e.stopPropagation();
+    const searchParam = encodeURIComponent(nomination.nominee.name);
+    const url = `${window.location.origin}/?search=${searchParam}`;
+    
+    try {
+      await navigator.clipboard.writeText(url);
+      setShowShareToast(true);
+      setTimeout(() => setShowShareToast(false), 2000);
+    } catch (error) {
+      console.error('Error copying to clipboard:', error);
+    }
+  };
+
   if (!nominee) {
     return null;
   }
@@ -336,9 +404,14 @@ export const NominationCard = ({ nomination }) => {
         <Header>
           <NameRow>
             <Name>{nominee.name}</Name>
-            <NominationType $type={type}>
-              {type === 'self' ? '🎯 Self' : '👥 Peer'}
-            </NominationType>
+            <NominationTypeGroup>
+              <NominationType $type={type}>
+                {type === 'self' ? '🎯 Self' : '👥 Peer'}
+              </NominationType>
+              <DesktopShareButton onClick={handleShare}>
+                <FaShare />
+              </DesktopShareButton>
+            </NominationTypeGroup>
           </NameRow>
           <CompanyInfo>
             {nominee.company} • {nominee.jobTitle}
@@ -365,6 +438,10 @@ export const NominationCard = ({ nomination }) => {
           >
             <FaLinkedin /> Profile
           </Button>
+          
+          <MobileShareButton onClick={handleShare}>
+            <FaShare /> Share
+          </MobileShareButton>
           
           <div 
             onMouseEnter={() => !currentUser && setShowTooltip(true)}
@@ -420,6 +497,12 @@ export const NominationCard = ({ nomination }) => {
           message="Your vote has been recorded. Great job! 🎉" 
           hiding={isToastHiding}
         />
+      )}
+
+      {showShareToast && (
+        <ShareToastMessage $show={true}>
+          Link copied to clipboard! 🎉
+        </ShareToastMessage>
       )}
     </>
   );

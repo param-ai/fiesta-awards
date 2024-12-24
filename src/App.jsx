@@ -544,6 +544,17 @@ function AppContent() {
     setFilteredNominations(filtered);
   }, [searchTerm, nominations]);
 
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const searchFromUrl = searchParams.get('search');
+    if (searchFromUrl) {
+      setSearchTerm(decodeURIComponent(searchFromUrl));
+      // Clear the search param from URL without affecting the browser history
+      const newUrl = window.location.pathname;
+      window.history.replaceState({}, '', newUrl);
+    }
+  }, [location.search]);
+
   const handleSignIn = async () => {
     try {
       await signInWithGoogle();
