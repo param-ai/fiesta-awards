@@ -34,8 +34,9 @@ const Card = styled.div`
   }
 
   @media (max-width: 768px) {
-    padding: 1rem;
+    padding: 0.875rem;
     border-radius: 12px;
+    min-height: 280px;
   }
 `
 
@@ -96,12 +97,22 @@ const NominationTypeGroup = styled.div`
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  height: 28px;
+
+  @media (max-width: 768px) {
+    height: auto;
+  }
 `
 
 const CompanyInfo = styled.div`
   color: rgba(255, 255, 255, 0.6);
   font-size: 0.875rem;
   line-height: 1.4;
+
+  @media (max-width: 768px) {
+    font-size: 0.8rem;
+    line-height: 1.3;
+  }
 `
 
 const Category = styled.div`
@@ -113,6 +124,12 @@ const Category = styled.div`
   font-size: 0.875rem;
   margin-top: 0.5rem;
   align-self: flex-start;
+
+  @media (max-width: 768px) {
+    font-size: 0.8rem;
+    padding: 0.2rem 0.6rem;
+    margin-top: 0.375rem;
+  }
 `
 
 const Stats = styled.div`
@@ -121,6 +138,11 @@ const Stats = styled.div`
   gap: 2rem;
   margin-bottom: 15px;
   margin-top: auto;
+
+  @media (max-width: 768px) {
+    gap: 1.5rem;
+    margin-bottom: 12px;
+  }
 `
 
 const StatItem = styled.div`
@@ -154,6 +176,11 @@ const Actions = styled.div`
   gap: 1rem;
   padding-top: 1rem;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
+
+  @media (max-width: 768px) {
+    padding-top: 0.875rem;
+    gap: 0.75rem;
+  }
 `
 
 const Button = styled.button`
@@ -195,7 +222,10 @@ const Button = styled.button`
   `}
 
   @media (max-width: 768px) {
-    padding: 0.75rem 1rem;
+    padding: 0.625rem 0.875rem;
+    min-width: 100px;
+    font-size: 0.8rem;
+    gap: 0.375rem;
   }
 `
 
@@ -207,9 +237,9 @@ const NominatorInfo = styled.div`
   color: rgba(255, 255, 255, 0.6);
 
   @media (max-width: 768px) {
-    margin-top: 0.75rem;
-    padding-top: 0.75rem;
-    font-size: 0.8rem;
+    margin-top: 0.625rem;
+    padding-top: 0.625rem;
+    font-size: 0.75rem;
     border-top-color: rgba(255, 255, 255, 0.05);
   }
 `
@@ -294,6 +324,38 @@ const ShareToastMessage = styled.div`
   z-index: 1000;
   opacity: ${props => props.$show ? 1 : 0};
   transition: opacity 0.3s ease;
+`
+
+const LinkedInButton = styled.a`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 14px;
+  background: rgba(10, 102, 194, 0.1);
+  color: #0a66c2;
+  border: 1px solid rgba(10, 102, 194, 0.2);
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: rgba(10, 102, 194, 0.2);
+    transform: translateY(-2px);
+  }
+
+  svg {
+    font-size: 14px;
+  }
+
+  @media (max-width: 768px) {
+    width: 24px;
+    height: 24px;
+    border-radius: 12px;
+    
+    svg {
+      font-size: 12px;
+    }
+  }
 `
 
 export const NominationCard = ({ nomination }) => {
@@ -403,14 +465,25 @@ export const NominationCard = ({ nomination }) => {
       <Content>
         <Header>
           <NameRow>
-            <Name>{nominee.name}</Name>
+            <Name>
+              {nomination.nominee.name}
+            </Name>
             <NominationTypeGroup>
-              <NominationType $type={type}>
-                {type === 'self' ? '🎯 Self' : '👥 Peer'}
-              </NominationType>
               <DesktopShareButton onClick={handleShare}>
-                <FaShare />
+                <FaShare style={{ marginRight: '4px' }} /> Share
               </DesktopShareButton>
+              <NominationType $type={type}>
+                {type === 'self' ? 'Self' : 'Peer'}
+              </NominationType>
+              {nomination.nominee.linkedinUrl && (
+                <LinkedInButton 
+                  href={nomination.nominee.linkedinUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FaLinkedin />
+                </LinkedInButton>
+              )}
             </NominationTypeGroup>
           </NameRow>
           <CompanyInfo>
