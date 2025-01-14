@@ -7,6 +7,7 @@ import { NominateOtherForm } from './NominateOtherForm';
 import { saveNomination } from '../services/nominationService';
 import { useAuth } from '../contexts/AuthContext'; // Assuming you have auth context
 import { categoryQuestions } from './CategoryQuestions';
+import { toast } from 'react-hot-toast';
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -414,6 +415,11 @@ const ButtonGroup = styled.div`
   }
 `
 
+const isNominationPeriodActive = () => {
+  const deadline = new Date('2024-01-13T18:00:00');
+  return new Date() <= deadline;
+};
+
 export const NominationModal = ({ onClose }) => {
   const [step, setStep] = useState('initial');
   const [formData, setFormData] = useState({});
@@ -522,6 +528,10 @@ export const NominationModal = ({ onClose }) => {
   };
 
   const handleSubmit = async () => {
+    if (!isNominationPeriodActive()) {
+      toast.error('Nomination period has ended');
+      return;
+    }
     // Skip validation if nominating someone else and they chose not to provide additional info
     const skipValidation = nominationType === 'other' && formData.hasChosenInfoOption && !formData.wantsToAddInfo;
 

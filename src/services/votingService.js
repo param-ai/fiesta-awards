@@ -1,7 +1,17 @@
 import { db } from '../firebase';
 import { doc, setDoc, updateDoc, increment, arrayUnion } from 'firebase/firestore';
 
+const isVotingPeriodActive = () => {
+  const deadline = new Date('2025-01-15T23:59:00');
+  return new Date() <= deadline;
+};
+
 export const submitVote = async (nominationId, userId, isJury, juryPoints = null) => {
+  // Allow jury votes after deadline, but check regular votes
+  if (!isJury && !isVotingPeriodActive()) {
+    throw new Error('Voting period has ended for regular users');
+  }
+
   const voteRef = doc(db, 'votes', `${userId}_${nominationId}`);
   const nominationRef = doc(db, 'nominations', nominationId);
 

@@ -426,6 +426,25 @@ const Button = styled.button`
   }
 `
 
+const NotificationBanner = styled.div`
+  background: rgba(244, 67, 54, 0.1);
+  color: #ef9a9a;
+  padding: 1rem;
+  text-align: center;
+  border-bottom: 1px solid rgba(244, 67, 54, 0.2);
+  font-size: 0.9rem;
+`;
+
+const isVotingPeriodActive = () => {
+  const deadline = new Date('2025-01-15T23:59:00');
+  return new Date() <= deadline;
+};
+
+const isNominationPeriodActive = () => {
+  const deadline = new Date('2025-01-15T23:59:00');
+  return new Date() <= deadline;
+};
+
 function AppContent() {
   const [timeLeft, setTimeLeft] = useState('')
   const [user, setUser] = useState(null)
@@ -439,6 +458,7 @@ function AppContent() {
   const isLeaderboardPage = location.pathname === '/leaderboard';
   const isJuryPage = location.pathname === '/jury';
   const isRulesPage = location.pathname === '/rules';
+  const isVotingExpired = !isVotingPeriodActive();
 
   const { currentUser, userDetails, signIn } = useAuth();
 
@@ -635,6 +655,11 @@ function AppContent() {
 
   return (
     <Container>
+      {isVotingExpired && !isLeaderboardPage && !isJuryPage && !isRulesPage && (
+        <NotificationBanner>
+          Nominations and community voting are now closed. The jury panel is currently evaluating the nominations. Thank you for participating! 🎉
+        </NotificationBanner>
+      )}
       <Header>
         <Logo>
           <Title onClick={() => navigate('/')}>FiesTA Awwards</Title>
@@ -657,7 +682,9 @@ function AppContent() {
           <JuryButton onClick={() => navigate('/jury')}>Jury</JuryButton>
           {user ? (
             <>
-              <NominateButton onClick={handleNominateClick}>Nominate</NominateButton>
+              {isNominationPeriodActive() && (
+                <NominateButton onClick={handleNominateClick}>Nominate</NominateButton>
+              )}
               <UserInfo>
                 {user.photoURL ? (
                   <UserImage 

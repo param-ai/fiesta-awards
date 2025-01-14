@@ -8,6 +8,7 @@ import { db } from '../firebase';
 import { NominationDetailModal } from './NominationDetailModal';
 import { JuryVoteModal } from './JuryVoteModal';
 import { Toast } from './Toast';
+import { toast } from 'react-hot-toast';
 
 const Card = styled.div`
   background: rgba(255, 255, 255, 0.02);
@@ -358,6 +359,39 @@ const LinkedInButton = styled.a`
   }
 `
 
+const VoteButton = styled(Button)`
+  background: ${props => {
+    if (props.$voted) return 'rgba(76, 175, 80, 0.1)';
+    if (props.$expired) return 'rgba(244, 67, 54, 0.1)';
+    return 'rgba(255, 255, 255, 0.05)';
+  }};
+  color: ${props => {
+    if (props.$voted) return '#81c784';
+    if (props.$expired) return '#ef9a9a';
+    return 'rgba(255, 255, 255, 0.8)';
+  }};
+  border-color: ${props => {
+    if (props.$voted) return 'rgba(76, 175, 80, 0.2)';
+    if (props.$expired) return 'rgba(244, 67, 54, 0.2)';
+    return 'rgba(255, 255, 255, 0.1)';
+  }};
+
+  &:hover:not(:disabled) {
+    background: ${props => props.$voted ? 'rgba(76, 175, 80, 0.15)' : 'rgba(255, 255, 255, 0.08)'};
+    border-color: ${props => props.$voted ? 'rgba(76, 175, 80, 0.3)' : 'rgba(255, 255, 255, 0.2)'};
+  }
+
+  &:disabled {
+    opacity: 0.8;
+    cursor: not-allowed;
+  }
+`;
+
+const isVotingPeriodActive = () => {
+  const deadline = new Date('2025-01-15T23:59:00');
+  return new Date() <= deadline;
+};
+
 export const NominationCard = ({ nomination }) => {
   const { currentUser, userDetails } = useAuth();
   const [hasVoted, setHasVoted] = useState(false);
@@ -380,26 +414,28 @@ export const NominationCard = ({ nomination }) => {
   const { nominee, type, nominator, totalVotes, juryScore } = nomination;
 
   const handleVote = useCallback(async (e) => {
-    // Stop event propagation to prevent card click
     e.stopPropagation();
     
     if (!currentUser || hasVoted) return;
 
-    if (isJury) {
-      setShowJuryModal(true);
-    } else {
-      try {
+    try {
+      if (!isJury && !isVotingPeriodActive()) {
+        toast.error('Voting period has ended for regular users');
+        return;
+      }
+
+      if (isJury) {
+        setShowJuryModal(true);
+      } else {
         await submitVote(nomination.id, currentUser.uid, false);
         setHasVoted(true);
-        // Show toast
         setShowToast(true);
-        // Start hiding animation after 700ms
         setTimeout(() => setIsToastHiding(true), 700);
-        // Remove toast after animation (300ms)
         setTimeout(() => setShowToast(false), 1000);
-      } catch (error) {
-        console.error('Error voting:', error);
       }
+    } catch (error) {
+      console.error('Error voting:', error);
+      toast.error(error.message);
     }
   }, [currentUser, hasVoted, nomination.id, isJury]);
 
@@ -460,6 +496,16 @@ export const NominationCard = ({ nomination }) => {
     return null;
   }
 
+  const isVotingExpired = !isVotingPeriodActive();
+  const showVoteTooltip = !currentUser || (isVotingExpired && !isJury);
+
+  const getVoteButtonText = () => {
+    if (hasVoted) return 'Voted';
+    if (isJury) return 'Jury (+50)';
+    if (isVotingExpired) return 'Voting Closed';
+    return 'Vote';
+  };
+
   const memoizedContent = useMemo(() => (
     <Card $type={type} onClick={() => setShowDetail(true)} style={{ cursor: 'pointer' }}>
       <Content>
@@ -517,22 +563,23 @@ export const NominationCard = ({ nomination }) => {
           </MobileShareButton>
           
           <div 
-            onMouseEnter={() => !currentUser && setShowTooltip(true)}
+            onMouseEnter={() => showVoteTooltip && setShowTooltip(true)}
             onMouseLeave={() => setShowTooltip(false)}
           >
             <Button
               onClick={handleVote}
-              disabled={hasVoted}
+              disabled={hasVoted || (isVotingExpired && !isJury)}
               $voted={hasVoted}
+              $expired={isVotingExpired && !isJury && !hasVoted}
               $isJury={isJury}
-              style={{ cursor: currentUser ? 'pointer' : 'not-allowed' }}
+              style={{ cursor: (currentUser && (!isVotingExpired || isJury)) ? 'pointer' : 'not-allowed' }}
             >
               <FaThumbsUp />
-              {hasVoted ? 'Voted' : isJury ? 'Jury (+50)' : 'Vote'}
+              {getVoteButtonText()}
             </Button>
-            {!currentUser && (
+            {showVoteTooltip && (
               <Tooltip $show={showTooltip}>
-                Login to upvote please
+                {!currentUser ? 'Login to upvote please' : 'Voting period has ended for regular users'}
               </Tooltip>
             )}
           </div>
@@ -543,7 +590,9 @@ export const NominationCard = ({ nomination }) => {
         </NominatorInfo>
       </Content>
     </Card>
-  ), [nominee, type, nominator, totalVotes, juryScore, hasVoted, currentUser, isJury, showTooltip]);
+  ), [nominee, type, nominator, totalVotes, juryScore, hasVoted, currentUser, isJury, showTooltip, isVotingExpired]);
+
+  const showVoteButton = isJury || isVotingPeriodActive();
 
   return (
     <>
