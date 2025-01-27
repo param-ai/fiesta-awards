@@ -177,8 +177,8 @@ export const JuryPage = () => {
 
   return (
     <PageContainer>
-      <BackButton onClick={() => navigate('/')}>
-        <FaArrowLeft /> Back to Nominations
+      <BackButton onClick={() => navigate('/winners')}>
+        <FaArrowLeft /> Back to Winners
       </BackButton>
       
       <PageTitle>Meet Our Jury</PageTitle>

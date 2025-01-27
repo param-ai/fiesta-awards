@@ -8,10 +8,10 @@ import { collection, query, orderBy, getDocs, onSnapshot } from 'firebase/firest
 import { db } from './firebase'
 import { NominationCard } from './components/NominationCard'
 import { createOrUpdateUser } from './services/authService'
-import { useNavigate, Routes, Route, useLocation } from 'react-router-dom'
+import { useNavigate, Routes, Route, useLocation, Navigate } from 'react-router-dom'
 import { JuryPage } from './components/JuryPage'
 import { RulesPage } from './components/RulesPage'
-import { LeaderboardPage } from './components/LeaderboardPage'
+import { WinnersPage } from './components/WinnersPage'
 import { FaTrophy } from 'react-icons/fa'
 
 const Logo = styled.div`
@@ -35,25 +35,6 @@ const Title = styled.h1`
   
   @media (max-width: 768px) {
     font-size: 1.2rem;
-  }
-`
-
-const Countdown = styled.p`
-  color: #ff4444;
-  font-size: 0.8rem;
-  margin: 0.2rem 0 0 0;
-  opacity: 0.9;
-  font-family: 'Roboto Mono', monospace;
-  min-width: 380px;
-  text-align: left;
-  white-space: nowrap;
-
-  @media (max-width: 768px) {
-    min-width: unset;
-    width: 100%;
-    font-size: 0.75rem;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
 `
 
@@ -402,9 +383,9 @@ const EmojiContainer = styled.div`
   margin: 2rem 0;
 `
 
-const LeaderboardButton = styled(JuryButton)`
+const WinnersButton = styled(JuryButton)`
   &::before {
-    content: '🏆';
+    content: '📋';
   }
 `
 
@@ -446,7 +427,6 @@ const isNominationPeriodActive = () => {
 };
 
 function AppContent() {
-  const [timeLeft, setTimeLeft] = useState('')
   const [user, setUser] = useState(null)
   const [showNominationModal, setShowNominationModal] = useState(false)
   const [nominations, setNominations] = useState([])
@@ -455,7 +435,7 @@ function AppContent() {
   const [filteredNominations, setFilteredNominations] = useState([]);
   const navigate = useNavigate()
   const location = useLocation();
-  const isLeaderboardPage = location.pathname === '/leaderboard';
+  const isWinnersPage = location.pathname === '/winners';
   const isJuryPage = location.pathname === '/jury';
   const isRulesPage = location.pathname === '/rules';
   const isVotingExpired = !isVotingPeriodActive();
@@ -463,26 +443,8 @@ function AppContent() {
   const { currentUser, userDetails, signIn } = useAuth();
 
   useEffect(() => {
-    const calculateTimeLeft = () => {
-      const targetDate = new Date('2025-01-15T23:59:00')
-      const now = new Date()
-      const difference = targetDate - now
-
-      const days = Math.floor(difference / (1000 * 60 * 60 * 24)).toString().padStart(3, '0')
-      const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0')
-      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0')
-      const seconds = Math.floor((difference % (1000 * 60)) / 1000).toString().padStart(2, '0')
-
-      return `${days}d ${hours}h ${minutes}m ${seconds}s until Jan 15, 2025 11:59 PM`
-    }
-
-    const timer = setInterval(() => {
-      setTimeLeft(calculateTimeLeft())
-    }, 1000)
-
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
-        // Save/update user data in Firestore when they sign in
         try {
           await createOrUpdateUser(user);
           console.log('User data saved/updated in Firestore');
@@ -494,7 +456,6 @@ function AppContent() {
     });
 
     return () => {
-      clearInterval(timer)
       unsubscribe()
     }
   }, [])
@@ -575,6 +536,13 @@ function AppContent() {
     }
   }, [location.search]);
 
+  useEffect(() => {
+    // Redirect to winners page if at root
+    if (location.pathname === '/') {
+      navigate('/winners');
+    }
+  }, [location, navigate]);
+
   const handleSignIn = async () => {
     try {
       await signInWithGoogle();
@@ -602,11 +570,11 @@ function AppContent() {
   };
 
   const shouldShowSearch = () => {
-    return !['/leaderboard', '/jury'].includes(location.pathname);
+    return location.pathname !== '/rules' && location.pathname !== '/winners';
   };
 
   const shouldShowRulesButton = () => {
-    return location.pathname !== '/rules';
+    return location.pathname !== '/rules' && location.pathname !== '/winners';
   };
 
   const renderContent = () => {
@@ -655,18 +623,17 @@ function AppContent() {
 
   return (
     <Container>
-      {isVotingExpired && !isLeaderboardPage && !isJuryPage && !isRulesPage && (
+      {isVotingExpired && !isWinnersPage && !isJuryPage && !isRulesPage && (
         <NotificationBanner>
-          Nominations and community voting are now closed. The jury panel is currently evaluating the nominations. Thank you for participating! 🎉
+          Winner are already announced. Thank you for participating! 🎉
         </NotificationBanner>
       )}
       <Header>
         <Logo>
           <Title onClick={() => navigate('/')}>FiesTA Awwards</Title>
-          <Countdown>{timeLeft}</Countdown>
         </Logo>
         
-        {!isLeaderboardPage && !isJuryPage && !isRulesPage && (
+        {!isWinnersPage && !isJuryPage && !isRulesPage && (
           <SearchBar 
             type="text" 
             placeholder="Search by name, category or nominator..."
@@ -676,44 +643,14 @@ function AppContent() {
         )}
 
         <HeaderButtons>
-          <LeaderboardButton onClick={() => navigate('/leaderboard')}>
-            Leaderboard
-          </LeaderboardButton>
           <JuryButton onClick={() => navigate('/jury')}>Jury</JuryButton>
-          {user ? (
-            <>
-              {isNominationPeriodActive() && (
-                <NominateButton onClick={handleNominateClick}>Nominate</NominateButton>
-              )}
-              <UserInfo>
-                {user.photoURL ? (
-                  <UserImage 
-                    src={user.photoURL} 
-                    alt={user.displayName}
-                    onError={(e) => {
-                      e.target.style.display = 'none';
-                      e.target.nextSibling.style.display = 'flex';
-                    }}
-                  />
-                ) : (
-                  <UserInitials>
-                    {user.displayName?.split(' ').map(n => n[0]).join('').toUpperCase() || '?'}
-                  </UserInitials>
-                )}
-                <UserName>{user.displayName}</UserName>
-                <SignInButton onClick={handleSignOut}>Sign Out</SignInButton>
-              </UserInfo>
-            </>
-          ) : (
-            <SignInButton onClick={handleSignIn}>Sign In with Google</SignInButton>
-          )}
         </HeaderButtons>
       </Header>
 
       <Routes>
         <Route path="/jury" element={<JuryPage />} />
         <Route path="/rules" element={<RulesPage />} />
-        <Route path="/leaderboard" element={<LeaderboardPage />} />
+        <Route path="/winners" element={<WinnersPage />} />
         <Route path="/" element={renderContent()} />
       </Routes>
 
@@ -732,7 +669,22 @@ function AppContent() {
 
 function App() {
   const location = useLocation();
-  const shouldShowSearchBar = !['/', '/jury', '/rules'].includes(location.pathname);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Redirect to winners page if at root
+    if (location.pathname === '/') {
+      navigate('/winners');
+    }
+  }, [location, navigate]);
+
+  const shouldShowSearchBar = () => {
+    return location.pathname !== '/rules' && location.pathname !== '/winners';
+  };
+
+  const shouldShowRulesButton = () => {
+    return location.pathname !== '/rules' && location.pathname !== '/winners';
+  };
 
   return (
     <AuthProvider>
