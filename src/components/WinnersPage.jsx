@@ -449,7 +449,7 @@ export const WinnersPage = () => {
 
       <PageTitle>
         <FaTrophy />
-        FiesTA Awards 2024 Winners
+        FiesTA Awards 2025 Winners
       </PageTitle>
       <SubTitle>Celebrating Excellence in Talent Acquisition</SubTitle>
 
