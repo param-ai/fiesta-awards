@@ -408,7 +408,7 @@ const winnersData = {
     },
     {
       category: "Sourcing Games Runner Up",
-      name: "Sreekala Sreedahr",
+      name: "Sreekala Sreedhar",
       image: "https://media.licdn.com/dms/image/v2/D5603AQEhizjSGjQBTw/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1727957065615?e=1743638400&v=beta&t=n9Af0sWTVp7_XxFClXtoAGWWZiGvQH6rlVAbNjSWRdU",
       bio: "Outstanding talent sourcer with remarkable abilities in identifying and engaging top talent through creative sourcing strategies.",
       linkedin: "https://www.linkedin.com/in/sreekala-sreedhar-b86ba0a3/"
