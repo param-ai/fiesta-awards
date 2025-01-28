@@ -386,7 +386,7 @@ const winnersData = {
     {
       category: "Best Employer Branding Champion",
       name: "Sahil Nayar",
-      image: "https://media.licdn.com/dms/image/v2/D4D03AQGN6a0VG2Me2w/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1716187768186?e=1743638400&v=beta&t=LIUXgZLykO9hV1P1Nb6neFhGPLtqbFRezItgeegmMCE",
+      image: "/images/winners/sahil.jpeg",
       bio: "A pioneering force in employer branding, crafting compelling employer value propositions and building strong talent communities.",
       linkedin: "https://www.linkedin.com/in/sahilnayar/"
     },
