@@ -333,7 +333,7 @@ const winnersData = {
     {
       category: "OG TA Pillar",
       name: "Harish Muniraju",
-      image: "https://media.licdn.com/dms/image/v2/C4E03AQHR39LCHamLYQ/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1516271002850?e=1743638400&v=beta&t=ljc7Jpiy8riwn0n8lQ5OdY0Rt7SdbC2HRJCPgtiMDls",
+      image: "/images/winners/harish.jpeg",
       bio: "A legendary figure in talent acquisition with decades of experience, whose wisdom and leadership have shaped the industry and inspired countless professionals.",
       linkedin: "https://www.linkedin.com/in/harishmuniraju/"
     },
@@ -356,14 +356,14 @@ const winnersData = {
     {
       category: "Best Tech Recruiter",
       name: "Satish Ch",
-      image: "https://media.licdn.com/dms/image/v2/D5603AQF1ZbNcPeQ1ow/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1707494797598?e=1743638400&v=beta&t=xjb3lJ5DQIBR700qBfcqmEunYWxqKSC_fucaRRWzbbM",
+      image: "/images/winners/satish.jpeg",
       bio: "A tech recruiting virtuoso known for innovative hiring strategies and deep understanding of technical roles, consistently delivering top talent for challenging positions.",
       linkedin: "https://www.linkedin.com/in/satish-ch/"
     },
     {
       category: "Best GTM/ Business Recruiter",
       name: "Divesh Dhawan",
-      image: "https://media.licdn.com/dms/image/v2/D5603AQHdECQw-EgGVA/profile-displayphoto-shrink_800_800/B56ZSShUXDHsAc-/0/1737624999634?e=1743638400&v=beta&t=BE-ewbHn882MBFBysJZ521ZBrMaY6AoIB_OQTl5KqVE",
+      image: "/images/winners/divesh.jpeg",
       bio: "Expert in GTM and business recruitment, with an exceptional track record in building high-performing commercial teams across diverse industries.",
       linkedin: "https://www.linkedin.com/in/diveshdhawan/"
     },
@@ -379,7 +379,7 @@ const winnersData = {
     {
       category: "Candidate Experience & Ops Pro",
       name: "Jerryd Peter Marian Danny",
-      image: "https://media.licdn.com/dms/image/v2/D5603AQExRvWeGnteOg/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1726894832653?e=1743638400&v=beta&t=u3Dua_AUlQ49u6ZoKqNQceN7S3vP9R0Evz0wM7TfCW0",
+      image: "/images/winners/jerryd.jpeg",
       bio: "A champion of exceptional candidate experience, revolutionizing recruitment operations through innovative processes and technology integration.",
       linkedin: "https://www.linkedin.com/in/jerrydpeter89/"
     },
@@ -402,14 +402,14 @@ const winnersData = {
     {
       category: "Sourcing Games Winner",
       name: "Gajendra Singh",
-      image: "https://media.licdn.com/dms/image/v2/D5603AQENDRNwBx7hKw/profile-displayphoto-shrink_800_800/B56ZSjwtqwGoAg-/0/1737914244512?e=1743638400&v=beta&t=5bsMgmL4RHSKj0MVTpRAZr1e3KW5tVF5EH5KoO1LHx4",
+      image: "/images/winners/gajendra.jpeg",
       bio: "Champion of the sourcing challenge, demonstrating exceptional talent discovery skills and innovative sourcing techniques.",
       linkedin: "https://www.linkedin.com/in/gpslive247/"
     },
     {
       category: "Sourcing Games Runner Up",
       name: "Sreekala Sreedhar",
-      image: "https://media.licdn.com/dms/image/v2/D5603AQEhizjSGjQBTw/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1727957065615?e=1743638400&v=beta&t=n9Af0sWTVp7_XxFClXtoAGWWZiGvQH6rlVAbNjSWRdU",
+      image: "/images/winners/sreekala.jpeg",
       bio: "Outstanding talent sourcer with remarkable abilities in identifying and engaging top talent through creative sourcing strategies.",
       linkedin: "https://www.linkedin.com/in/sreekala-sreedhar-b86ba0a3/"
     }
@@ -425,7 +425,7 @@ const winnersData = {
     {
       category: "Startup Pitch (Special Mention)",
       name: "TA Buddy",
-      image: "https://media.licdn.com/dms/image/v2/D560BAQHoTGVPMJDBFw/company-logo_200_200/company-logo_200_200/0/1732854531816/tabuddy_logo?e=1746057600&v=beta&t=XUtP5ZhMl1nuvDtDL0A4RUX-M9SmYDseWWuIGyjVIaQ",
+      image: "/images/winners/tabuddy_logo.jpeg",
       bio: "A groundbreaking talent acquisition platform that streamlines recruitment processes and enhances hiring efficiency.",
       linkedin: "https://www.linkedin.com/company/tabuddy/"
     }
